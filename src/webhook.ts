@@ -4,7 +4,6 @@ import { verifySignaturev2 } from "./utils/verifySignaturev2";
 export async function handler(req: APIGatewayEvent) {
   if (!verifySignaturev2(req)) {
     console.error("invalid signature");
-    console.log(req);
     return {
       statusCode: 200,
       body: JSON.stringify({ status: "invalid signature" }, null, 2),
@@ -30,6 +29,6 @@ export async function handler(req: APIGatewayEvent) {
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ status: "ok", test: 456 }, null, 2),
+    body: JSON.stringify({ ok: true }),
   };
 }
