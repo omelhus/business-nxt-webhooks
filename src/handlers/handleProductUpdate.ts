@@ -16,13 +16,19 @@ export async function handleProductUpdate(
       cid: data.companyNo,
     })
     .then((p) => p?.useCompany?.product?.items?.[0]);
-
-  if (product?.productNo && product.changedByUser !== visma_client_id) {
+  const inf2 = `${product?.description?.substring(0, 10)} ${
+    product?.information1
+  }`;
+  if (
+    product?.productNo &&
+    product.changedByUser !== visma_client_id &&
+    product.information2 !== inf2
+  ) {
     const response = await client.request(Mutation_UpdateProduct, {
       cid: data.companyNo,
       productNo: product.productNo,
       input: {
-        information2: `${product.description} ${product.information1}`,
+        information2: inf2,
       },
     });
     console.log(response);
