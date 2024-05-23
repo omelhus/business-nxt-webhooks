@@ -16,9 +16,12 @@ export async function handleProductUpdate(
       cid: data.companyNo,
     })
     .then((p) => p?.useCompany?.product?.items?.[0]);
-  const inf2 = `${product?.description?.substring(0, 10)} ${
-    product?.information1
-  }`;
+
+  const inf2 = [
+    product?.description?.substring(0, 10),
+    product?.information1,
+  ].join(" - ");
+
   if (
     product?.productNo &&
     product.changedByUser !== visma_client_id &&
