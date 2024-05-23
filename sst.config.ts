@@ -1,5 +1,7 @@
 /// <reference path="./.sst/platform/config.d.ts" />
 
+import { handler } from "./src/webhook";
+
 export default $config({
   app(input) {
     return {
@@ -15,13 +17,19 @@ export default $config({
   },
   async run() {
     const api = new sst.aws.ApiGatewayV2("WebhookHandler");
+    
     api.route("POST /", {
-      handler: "src/webhook.handler"
+      handler: "src/webhook.handler",
+      environment: {
+        VISMA_SUBSCRIPTION_ID: process.env.VISMA_SUBSCRIPTION_ID,
+        VISMA_SUBSCRIPTION_SECRET: process.env.VISMA_SUBSCRIPTION_SECRET
+      }
     });
-
-
+    
+    console.log("Subscription ID", process.env.VISMA_SUBSCRIPTION_ID);
     return {
-      url: api.url
+      url: api.url,
+      subscriptionId: process.env.VISMA_SUBSCRIPTION_ID
     }
   },
 });
