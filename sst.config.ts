@@ -9,27 +9,25 @@ export default $config({
       removal: input?.stage === "production" ? "retain" : "remove",
       home: "aws",
       providers: {
-        aws:  {
-          region: "eu-north-1"
-        }
-      }
+        aws: {
+          region: "eu-north-1",
+        },
+      },
     };
   },
   async run() {
     const api = new sst.aws.ApiGatewayV2("WebhookHandler");
-    
+
     api.route("POST /", {
       handler: "src/webhook.handler",
       environment: {
-        VISMA_SUBSCRIPTION_ID: process.env.VISMA_SUBSCRIPTION_ID,
-        VISMA_SUBSCRIPTION_SECRET: process.env.VISMA_SUBSCRIPTION_SECRET
-      }
+        VISMA_SUBSCRIPTION_SECRET: process.env.VISMA_SUBSCRIPTION_SECRET,
+      },
     });
-    
-    console.log("Subscription ID", process.env.VISMA_SUBSCRIPTION_ID);
+
     return {
       url: api.url,
-      subscriptionId: process.env.VISMA_SUBSCRIPTION_ID
-    }
+      subscriptionId: process.env.VISMA_SUBSCRIPTION_ID,
+    };
   },
 });
