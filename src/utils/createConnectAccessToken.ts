@@ -1,4 +1,4 @@
-import { VismaConnectTokenResponseSchema } from "../schema/VismaConnectTokenResponseSchema";
+import { VismaConnectTokenResponseSchema } from "~/schema/VismaConnectTokenResponseSchema";
 
 export async function createConnectAccessToken(scopes?: string[]) {
   const url = "https://connect.visma.com/connect/token";

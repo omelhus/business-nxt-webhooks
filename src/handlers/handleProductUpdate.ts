@@ -1,8 +1,8 @@
-import { createGraphQLClient } from "../utils/createGraphQLClient.js";
-import { Query_Product } from "../queries/Query_Product";
-import { Mutation_UpdateProduct } from "../queries/Mutation_UpdateProduct";
-import { BusinessNXTWebhookPayload } from "../schema/BusinessNXTWebhookPayloadSchema";
-import { FilterExpression_Product } from "../gql/graphql";
+import { createGraphQLClient } from "~/utils/createGraphQLClient.js";
+import { Query_Product } from "~/queries/Query_Product";
+import { Mutation_UpdateProduct } from "~/queries/Mutation_UpdateProduct";
+import { BusinessNXTWebhookPayload } from "~/schema/BusinessNXTWebhookPayloadSchema";
+import { FilterExpression_Product } from "~/gql/graphql";
 
 export async function handleProductUpdate(
   graphQlFilter: FilterExpression_Product,
