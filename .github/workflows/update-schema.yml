@@ -1,0 +1,39 @@
+name: Update GraphQL Schema
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.5.2
+        with:
+          node-version: 18
+
+      - name: "Generate schema.graphql from Business API"
+        shell: bash
+        env:
+          VISMA_CLIENT_ID: ${{ secrets.VISMA_CLIENT_ID }}
+          VISMA_CLIENT_SECRET: ${{ secrets.VISMA_CLIENT_SECRET }}
+        run: |
+          npm install -g pnpm
+          pnpm i
+          pnpm update-schema
+
+      - name: Check for file changes & commit files
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          file_pattern: "src/visma/schema.graphql"
+          commit_message: Update Visma GraphQL schema
+          commit_user_name: ON IT BOT
+          commit_user_email: 385324+github-actions[bot]@users.noreply.github.com
+          commit_author: ON IT BOT <385324+github-actions[bot]@users.noreply.github.com>

@@ -9,7 +9,7 @@ You'll find contact information for Ole at https://on-it.no.
 - Follow this guide on how to set up your AWS account: https://sst.dev/guide.html
 - Computer with (at least) Node18 installed
 - Install pnpm using `npm i -g pnpm`
-- SST Ion runs on macOS, Linux and WSL.
+- SST Ion runs on macOS, Linux and WSL. You'll need one of those. I used WSL during the development of this example.
 - VS Code
 
 ## Getting started
