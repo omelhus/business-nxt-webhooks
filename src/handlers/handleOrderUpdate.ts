@@ -1,8 +1,8 @@
-import { createGraphQLClient } from "~/utils/createGraphQLClient.js";
-import { BusinessNXTWebhookPayload } from "~/schema/BusinessNXTWebhookPayloadSchema.js";
-import { Query_OrderLinesNamedRefForOrder } from "~/queries/Query_OrderLinesNamedRefForOrder.js";
-import { getPrimaryKeys } from "~/utils/createGraphQLFilterFromPrimaryKeys.js";
-import { Mutation_UpdateOrderLineDescription } from "~/queries/Mutation_UpdateOrderLineDescription.js";
+import { createGraphQLClient } from "~/utils/createGraphQLClient";
+import { BusinessNXTWebhookPayload } from "~/schema/BusinessNXTWebhookPayloadSchema";
+import { Query_OrderLinesNamedRefForOrder } from "~/queries/Query_OrderLinesNamedRefForOrder";
+import { getPrimaryKeys } from "~/utils/createGraphQLFilterFromPrimaryKeys";
+import { Mutation_UpdateOrderLineDescription } from "~/queries/Mutation_UpdateOrderLineDescription";
 
 export async function handleOrderUpdate(data: BusinessNXTWebhookPayload) {
   const client = await createGraphQLClient();

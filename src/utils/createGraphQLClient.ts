@@ -1,5 +1,5 @@
 import { GraphQLClient } from "graphql-request";
-import { createConnectAccessToken } from "./createConnectAccessToken.js";
+import { createConnectAccessToken } from "./createConnectAccessToken";
 
 export async function createGraphQLClient() {
   const token = await createConnectAccessToken([
