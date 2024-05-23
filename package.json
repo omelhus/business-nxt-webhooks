@@ -3,17 +3,32 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "sst dev",
+    "codegen": "graphql-codegen -r ts-node/register --config codegen.ts",
+    "update-schema": "tsx -r dotenv/config update-schema.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "sst": "ion"
+    "graphql": "^16.8.1",
+    "graphql-request": "^7.0.1",
+    "graphql-tag": "^2.12.6",
+    "sst": "ion",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/client-preset": "^4.2.6",
+    "@graphql-tools/load": "^8.0.2",
+    "@graphql-tools/url-loader": "^8.0.2",
     "@tsconfig/node18": "^18.2.4",
-    "@types/aws-lambda": "8.10.138"
+    "@types/aws-lambda": "8.10.138",
+    "@types/node": "^20.12.12",
+    "dotenv": "^16.4.5",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.11.0"
   }
 }

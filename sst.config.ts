@@ -22,12 +22,13 @@ export default $config({
       handler: "src/webhook.handler",
       environment: {
         VISMA_SUBSCRIPTION_SECRET: process.env.VISMA_SUBSCRIPTION_SECRET,
+        VISMA_CLIENT_ID: process.env.VISMA_CLIENT_ID,
+        VISMA_CLIENT_SECRET: process.env.VISMA_CLIENT_SECRET,
       },
     });
 
     return {
       url: api.url,
-      subscriptionId: process.env.VISMA_SUBSCRIPTION_ID,
     };
   },
 });
