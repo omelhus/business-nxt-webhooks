@@ -2,6 +2,7 @@
   "extends": "@tsconfig/node18",
   "compilerOptions": {
     "moduleResolution": "Bundler",
+    "module": "ES6",
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {

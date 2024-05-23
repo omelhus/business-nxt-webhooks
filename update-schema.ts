@@ -19,6 +19,7 @@ async function create_visma_token() {
     body: body,
   });
   const json = await fetchResult.json();
+  // @ts-expect-error access_token is a property of the json object
   return json.access_token;
 }
 

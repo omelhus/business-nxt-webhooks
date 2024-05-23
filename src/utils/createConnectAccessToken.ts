@@ -1,10 +1,4 @@
-import z from "zod";
-
-const schema = z.object({
-  error: z.string().nullish(),
-  access_token: z.string().nullish(),
-  expires_in: z.number().optional(),
-});
+import { VismaConnectTokenResponseSchema } from "../schema/VismaConnectTokenResponseSchema";
 
 export async function createConnectAccessToken(scopes?: string[]) {
   const url = "https://connect.visma.com/connect/token";
@@ -23,8 +17,9 @@ export async function createConnectAccessToken(scopes?: string[]) {
     },
     body: body.toString(),
   });
+
   const data = await response.json();
-  const parsed = schema.safeParse(data);
+  const parsed = VismaConnectTokenResponseSchema.safeParse(data);
   if (parsed.success) {
     if (parsed.data.error) {
       console.error(

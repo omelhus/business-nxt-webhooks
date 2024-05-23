@@ -9,6 +9,7 @@ export function getVismaConnectHeaders(
     notificationId: req["x-vwd-notification-id"],
     notificationTimestamp: Number(req["x-vwd-notification-timestamp"]),
     subscriptionId: req["x-vwd-subscription-id"],
+    signature: req["x-vwd-signature-v1"],
     tenantId: req["x-vwd-tenant-id"],
     webhookTimestamp: Number(req["x-vwd-webhook-timestamp"]),
   };

@@ -1,56 +1,44 @@
 import { APIGatewayEvent } from "aws-lambda";
 import { verifySignaturev2 } from "./utils/verifySignaturev2";
 import { getVismaConnectHeaders } from "./utils/getVismaConnectHeaders";
-import { createConnectAccessToken } from "./utils/createConnectAccessToken";
-import { toCamelCase } from "./utils/toCamelCase";
-import { createGraphQLClient } from "./utils/createGraphQLClient.js";
-import { Query_Product } from "./queries/Query_Product";
-import { Mutation_UpdateProduct } from "./queries/Mutation_UpdateProduct";
+import { createGraphQLFilterFromPrimaryKeys } from "./utils/createGraphQLFilterFromPrimaryKeys";
+import { BusinessNXTWebhookPayloadSchema } from "./schema/BusinessNXTWebhookPayloadSchema";
+import { handleProductUpdate } from "./handlers/handleProductUpdate";
+import { handleOrderUpdate } from "./handlers/handleOrderUpdate";
 
 export async function handler(req: APIGatewayEvent) {
   if (!verifySignaturev2(req)) {
-    console.error("invalid signature");
+    console.error("invalid signature or invalid body");
     console.log(req);
     return {
-      statusCode: 200, // this is a pro-tip to avoid connect retrying these requests
+      statusCode: 200, // Avoid Visma Connect retrying these requests
       body: JSON.stringify({ status: "invalid signature" }, null, 2),
     };
   }
-  const visma_client_id = process.env.VISMA_CLIENT_ID;
+
+  const body = req.body
+    ? BusinessNXTWebhookPayloadSchema.safeParse(JSON.parse(req.body))
+    : null;
+
+  if (!body || !body.success) {
+    console.error("invalid body");
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ status: "invalid body" }, null, 2),
+    };
+  }
+
+  const { data } = body;
   const connect_info = getVismaConnectHeaders(req.headers);
+  const graphQlFilter = createGraphQLFilterFromPrimaryKeys(data.primaryKeys);
 
-  const body = req.body ? JSON.parse(req.body) : null;
-
-  const graphQlFilter = {
-    _and: body?.primaryKeys.flatMap(
-      (primaryKey: Record<string, string | number>) => {
-        return Object.entries(primaryKey).map(([key, value]) => ({
-          [toCamelCase(key)]: { _eq: value },
-        }));
-      }
-    ),
-  };
-
-  const client = await createGraphQLClient();
-
-  const product = await client
-    .request(Query_Product, {
-      filter: graphQlFilter,
-      cid: body.companyNo,
-    })
-    .then((p) => p?.useCompany?.product?.items?.[0]);
-
-  if (product && product.changedByUser !== visma_client_id) {
-    const response = await client.request(Mutation_UpdateProduct, {
-      cid: body.companyNo,
-      productNo: product.productNo,
-      input: {
-        information2: `${product.description} ${product.information1}`,
-      },
-    });
-    console.log(response);
-  } else {
-    console.log("changed by me. skipping update.");
+  switch (data.tableIdentifier) {
+    case "Product":
+      await handleProductUpdate(graphQlFilter, data);
+      break;
+    case "Order":
+      await handleOrderUpdate(data);
+      break;
   }
 
   console.info(

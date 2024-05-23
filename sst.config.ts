@@ -1,7 +1,5 @@
 /// <reference path="./.sst/platform/config.d.ts" />
 
-import { handler } from "./src/webhook";
-
 export default $config({
   app(input) {
     return {
@@ -21,9 +19,9 @@ export default $config({
     api.route("POST /", {
       handler: "src/webhook.handler",
       environment: {
-        VISMA_SUBSCRIPTION_SECRET: process.env.VISMA_SUBSCRIPTION_SECRET,
-        VISMA_CLIENT_ID: process.env.VISMA_CLIENT_ID,
-        VISMA_CLIENT_SECRET: process.env.VISMA_CLIENT_SECRET,
+        VISMA_SUBSCRIPTION_SECRET: process.env.VISMA_SUBSCRIPTION_SECRET!,
+        VISMA_CLIENT_ID: process.env.VISMA_CLIENT_ID!,
+        VISMA_CLIENT_SECRET: process.env.VISMA_CLIENT_SECRET!,
       },
     });
 
