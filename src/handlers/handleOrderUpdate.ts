@@ -16,22 +16,28 @@ export async function handleOrderUpdate(data: BusinessNXTWebhookPayload) {
     .then((p) => p?.useCompany?.orderLine?.items);
 
   if (orderLines?.length) {
-    for (const orderLine of orderLines) {
-      if (orderLine?.transactionInformation1 && orderLine?.productNo) {
-        const descr = `${orderLine.productNo} ${orderLine.transactionInformation1}`;
-        if (descr !== orderLine.description && orderLine.lineNo) {
-          const response = await client.request(
-            Mutation_UpdateOrderLineDescription,
-            {
+    const updates = orderLines
+      .map((orderLine) => {
+        if (orderLine?.transactionInformation1 && orderLine?.productNo) {
+          const descr = `${orderLine.productNo} ${orderLine.transactionInformation1}`;
+          if (descr !== orderLine.description && orderLine.lineNo) {
+            return {
               cid: data.companyNo,
               orderNo: Number(primaryKeys.OrderNo),
               lineNo: orderLine.lineNo,
               description: descr,
-            }
-          );
-          console.log(response);
+            };
+          }
         }
-      }
-    }
+      })
+      .filter((x) => x);
+
+    const responses = await client.batchRequests(
+      updates.map((u) => ({
+        document: Mutation_UpdateOrderLineDescription,
+        variables: u,
+      }))
+    );
+    console.log(responses);
   }
 }
