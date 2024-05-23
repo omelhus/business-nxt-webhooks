@@ -20,7 +20,7 @@ export async function handler(req: APIGatewayEvent) {
     ? BusinessNXTWebhookPayloadSchema.safeParse(JSON.parse(req.body))
     : null;
 
-  if (!body || !body.success) {
+  if (!body?.success) {
     console.error("invalid body");
     return {
       statusCode: 200,
@@ -29,12 +29,12 @@ export async function handler(req: APIGatewayEvent) {
   }
 
   const { data } = body;
-  const connect_info = getVismaConnectHeaders(req.headers);
-  const graphQlFilter = createGraphQLFilterFromPrimaryKeys(data.primaryKeys);
+  const headers = getVismaConnectHeaders(req.headers);
+  const filter = createGraphQLFilterFromPrimaryKeys(data.primaryKeys);
 
   switch (data.tableIdentifier) {
     case "Product":
-      await handleProductUpdate(graphQlFilter, data);
+      await handleProductUpdate(filter, data);
       break;
     case "Order":
       await handleOrderUpdate(data);
@@ -42,13 +42,13 @@ export async function handler(req: APIGatewayEvent) {
   }
 
   console.info(
-    connect_info.eventId,
+    headers.eventId,
     {
-      ...connect_info,
-      duration: Date.now() - connect_info.notificationTimestamp,
+      ...headers,
+      duration: Date.now() - headers.notificationTimestamp,
       body,
     },
-    JSON.stringify(graphQlFilter, null, 2)
+    JSON.stringify(filter, null, 2)
   );
 
   return {
