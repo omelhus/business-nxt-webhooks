@@ -3,16 +3,19 @@ import { Query_Product } from "~/queries/Query_Product";
 import { Mutation_UpdateProduct } from "~/queries/Mutation_UpdateProduct";
 import { BusinessNXTWebhookPayload } from "~/schema/BusinessNXTWebhookPayloadSchema";
 import { FilterExpression_Product } from "~/gql/graphql";
+import { getPrimaryKeys } from "~/utils/createGraphQLFilterFromPrimaryKeys";
 
 export async function handleProductUpdate(
-  graphQlFilter: FilterExpression_Product,
+  filter: FilterExpression_Product,
   data: BusinessNXTWebhookPayload
 ) {
   const visma_client_id = process.env.VISMA_CLIENT_ID;
+  const primaryKeys = getPrimaryKeys(data.primaryKeys);
+  console.log("Handle product update", primaryKeys.ProductNo, data.companyNo);
   const client = await createGraphQLClient();
   const product = await client
     .request(Query_Product, {
-      filter: graphQlFilter,
+      filter: filter,
       cid: data.companyNo,
     })
     .then((p) => p?.useCompany?.product?.items?.[0]);

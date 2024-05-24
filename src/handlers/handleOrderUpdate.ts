@@ -5,8 +5,9 @@ import { getPrimaryKeys } from "~/utils/createGraphQLFilterFromPrimaryKeys";
 import { Mutation_UpdateOrderLineDescription } from "~/queries/Mutation_UpdateOrderLineDescription";
 
 export async function handleOrderUpdate(data: BusinessNXTWebhookPayload) {
-  const client = await createGraphQLClient();
   const primaryKeys = getPrimaryKeys(data.primaryKeys);
+  console.log("Handle order update", primaryKeys.OrderNo, data.companyNo);
+  const client = await createGraphQLClient();
 
   const orderLines = await client
     .request(Query_OrderLinesNamedRefForOrder, {

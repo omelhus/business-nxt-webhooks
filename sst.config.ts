@@ -3,7 +3,7 @@
 export default $config({
   app(input) {
     return {
-      name: "demo-vnet-1",
+      name: "demo-bnxt-webhooks",
       removal: input?.stage === "production" ? "retain" : "remove",
       home: "aws",
       providers: {
