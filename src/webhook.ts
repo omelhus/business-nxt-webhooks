@@ -1,11 +1,13 @@
-import { APIGatewayEvent } from "aws-lambda";
+import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { verifySignaturev2 } from "./utils/verifySignaturev2";
 import { getVismaConnectHeaders } from "./utils/getVismaConnectHeaders";
 import { BusinessNXTWebhookPayloadSchema } from "./schema/BusinessNXTWebhookPayloadSchema";
 import { handleProductUpdate } from "./handlers/handleProductUpdate";
 import { handleOrderUpdate } from "./handlers/handleOrderUpdate";
 
-export async function handler(req: APIGatewayEvent) {
+export async function handler(
+  req: APIGatewayEvent
+): Promise<APIGatewayProxyResult> {
   if (!verifySignaturev2(req)) {
     console.error("invalid signature or invalid body");
     console.log(req);
