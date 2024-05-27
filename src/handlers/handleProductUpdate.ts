@@ -2,16 +2,12 @@ import { createGraphQLClient } from "~/utils/createGraphQLClient.js";
 import { Query_Product } from "~/queries/Query_Product";
 import { Mutation_UpdateProduct } from "~/queries/Mutation_UpdateProduct";
 import { BusinessNXTWebhookPayload } from "~/schema/BusinessNXTWebhookPayloadSchema";
-import { FilterExpression_Product } from "~/gql/graphql";
-import { getPrimaryKeys } from "~/utils/createGraphQLFilterFromPrimaryKeys";
+import { createGraphQLFilterFromPrimaryKeys } from "~/utils/createGraphQLFilterFromPrimaryKeys";
 
-export async function handleProductUpdate(
-  filter: FilterExpression_Product,
-  data: BusinessNXTWebhookPayload
-) {
+export async function handleProductUpdate(data: BusinessNXTWebhookPayload) {
   const visma_client_id = process.env.VISMA_CLIENT_ID;
-  const primaryKeys = getPrimaryKeys(data.primaryKeys);
-  console.log("Handle product update", primaryKeys.ProductNo, data.companyNo);
+  const filter = createGraphQLFilterFromPrimaryKeys(data.primaryKeys);
+  console.log("Handle product update", filter, data.companyNo);
   const client = await createGraphQLClient();
   const product = await client
     .request(Query_Product, {
@@ -27,7 +23,9 @@ export async function handleProductUpdate(
 
   if (
     product?.productNo &&
+    // avoid updating the product if it was changed by the visma client
     product.changedByUser !== visma_client_id &&
+    // avoid updating the product if the information2 is already correct
     product.information2 !== inf2
   ) {
     const response = await client.request(Mutation_UpdateProduct, {

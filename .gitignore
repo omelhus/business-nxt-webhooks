@@ -3,3 +3,4 @@
 .sst
 node_modules
 .env*
+.vscode/settings.json

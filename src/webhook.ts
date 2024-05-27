@@ -1,7 +1,6 @@
 import { APIGatewayEvent } from "aws-lambda";
 import { verifySignaturev2 } from "./utils/verifySignaturev2";
 import { getVismaConnectHeaders } from "./utils/getVismaConnectHeaders";
-import { createGraphQLFilterFromPrimaryKeys } from "./utils/createGraphQLFilterFromPrimaryKeys";
 import { BusinessNXTWebhookPayloadSchema } from "./schema/BusinessNXTWebhookPayloadSchema";
 import { handleProductUpdate } from "./handlers/handleProductUpdate";
 import { handleOrderUpdate } from "./handlers/handleOrderUpdate";
@@ -30,26 +29,21 @@ export async function handler(req: APIGatewayEvent) {
 
   const { data } = body;
   const headers = getVismaConnectHeaders(req.headers);
-  const filter = createGraphQLFilterFromPrimaryKeys(data.primaryKeys);
 
   switch (data.tableIdentifier) {
     case "Product":
-      await handleProductUpdate(filter, data);
+      await handleProductUpdate(data);
       break;
     case "Order":
       await handleOrderUpdate(data);
       break;
   }
 
-  console.info(
-    headers.eventId,
-    {
-      ...headers,
-      duration: Date.now() - headers.notificationTimestamp,
-      body,
-    },
-    JSON.stringify(filter, null, 2)
-  );
+  console.info(headers.eventId, {
+    ...headers,
+    duration: Date.now() - headers.notificationTimestamp,
+    body,
+  });
 
   return {
     statusCode: 200,
