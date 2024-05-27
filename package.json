@@ -1,14 +1,14 @@
 {
-  "name": "demo-business-nxt-webhooks",
+  "name": "business-nxt-webhooks",
   "version": "1.0.0",
   "description": "Demo Project for Business NXT Webhooks",
   "type": "module",
   "scripts": {
-    "dev:codegen": "graphql-codegen -r ts-node/register --watch --config codegen.ts",
+    "dev:codegen": "graphql-codegen -r ts-node/register --watch --config tools/codegen.ts",
     "dev:sst": "sst dev",
     "dev": "pnpm run --parallel \"/^dev:.*/\"",
-    "codegen": "graphql-codegen -r ts-node/register --config codegen.ts",
-    "update-schema": "tsx -r dotenv/config update-schema.ts"
+    "codegen": "graphql-codegen -r ts-node/register --config tools/codegen.ts",
+    "update-schema": "tsx -r dotenv/config tools/update-schema.ts"
   },
   "keywords": [],
   "author": "Ole Melhus",
