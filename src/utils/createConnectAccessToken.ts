@@ -3,7 +3,7 @@ import { VismaConnectTokenResponseSchema } from "~/schema/VismaConnectTokenRespo
 let cachedAccessToken: string | null | undefined = null;
 let cachedAccessTokenExpiresAt: number | null | undefined = null;
 
-export async function createConnectAccessToken(scopes?: string[]) {
+export async function createConnectAccessToken(env: any, scopes?: string[]) {
   if (
     cachedAccessToken &&
     cachedAccessTokenExpiresAt &&
@@ -15,8 +15,8 @@ export async function createConnectAccessToken(scopes?: string[]) {
   const url = "https://connect.visma.com/connect/token";
   const body = new URLSearchParams();
   body.append("grant_type", "client_credentials");
-  body.append(`client_id`, process.env.VISMA_CLIENT_ID ?? ``);
-  body.append(`client_secret`, process.env.VISMA_CLIENT_SECRET ?? ``);
+  body.append(`client_id`, env.VISMA_CLIENT_ID ?? ``);
+  body.append(`client_secret`, env.VISMA_CLIENT_SECRET ?? ``);
   if (scopes) {
     body.append("scope", scopes?.join(" "));
   }
@@ -35,7 +35,7 @@ export async function createConnectAccessToken(scopes?: string[]) {
     if (parsed.data.error) {
       console.error(
         "Unable to obtain token",
-        process.env.VISMA_CLIENT_ID,
+        env.VISMA_CLIENT_ID,
         parsed.data.error
       );
       return null;

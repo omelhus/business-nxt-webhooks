@@ -34,10 +34,10 @@ export async function handler(
 
   switch (data.tableIdentifier) {
     case "Product":
-      await handleProductUpdate(data);
+      await handleProductUpdate(data, process.env);
       break;
     case "Order":
-      await handleOrderUpdate(data);
+      await handleOrderUpdate(data, process.env);
       break;
   }
 
