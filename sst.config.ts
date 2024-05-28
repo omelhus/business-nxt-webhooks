@@ -25,14 +25,8 @@ export default $config({
       },
     });
 
-    const worker = new sst.cloudflare.Worker("CfWebhookHandler", {
-      handler: "./src/cloudflare-webhook.ts",
-      url: true,
-    });
-
     return {
       url: api.url,
-      cloudflareUrl: worker.url,
     };
   },
 });
