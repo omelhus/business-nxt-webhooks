@@ -30,7 +30,6 @@ export async function handler(
   }
 
   const { data } = body;
-  const headers = getVismaConnectHeaders(req.headers);
 
   switch (data.tableIdentifier) {
     case "Order":
@@ -41,6 +40,10 @@ export async function handler(
       break;
   }
 
+  const headers = getVismaConnectHeaders(req.headers);
+
+  // let's use the notificationTimestamp to calculate the duration of the
+  // request from the time it was sent to the time it was processed
   console.info(headers.eventId, {
     ...headers,
     duration: Date.now() - headers.notificationTimestamp,
