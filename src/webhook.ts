@@ -33,11 +33,11 @@ export async function handler(
   const headers = getVismaConnectHeaders(req.headers);
 
   switch (data.tableIdentifier) {
-    case "Product":
-      await handleProductUpdate(data);
-      break;
     case "Order":
       await handleOrderUpdate(data);
+      break;
+    case "Product":
+      await handleProductUpdate(data);
       break;
   }
 
