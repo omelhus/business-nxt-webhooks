@@ -17,11 +17,11 @@ export async function handler(
     };
   }
 
-  const body = req.body
+  const payload = req.body
     ? BusinessNXTWebhookPayloadSchema.safeParse(JSON.parse(req.body))
     : null;
 
-  if (!body?.success) {
+  if (!payload?.success) {
     console.error("invalid body");
     return {
       statusCode: 200,
@@ -29,7 +29,7 @@ export async function handler(
     };
   }
 
-  const { data } = body;
+  const { data } = payload;
 
   switch (data.tableIdentifier) {
     case "Order":
@@ -47,7 +47,7 @@ export async function handler(
   console.info(headers.eventId, {
     ...headers,
     duration: Date.now() - headers.notificationTimestamp,
-    body,
+    body: payload,
   });
 
   return {
