@@ -11,10 +11,10 @@ export async function handler(
   if (!verifySignaturev2(req)) {
     console.error("invalid signature or invalid body");
     console.log(req);
-    return {
+    /* return {
       statusCode: 200, // Avoid Visma Connect retrying these requests
       body: JSON.stringify({ status: "invalid signature" }, null, 2),
-    };
+    };*/
   }
 
   const payload = req.body
