@@ -1,3 +1,7 @@
+# Looking to automate Business NXT with triggers?
+
+Check out [NXT Triggers](https://businessnxt.dev/?trk=github). It's the simplest way to replace SQL triggers for Business NXT.
+
 # Business NXT Webhooks Demo
 
 Presented by Ole Melhus at the Visma ISV Partner Day 28/05/2024.
