@@ -9,15 +9,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           persist-credentials: true
           fetch-depth: 0
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.5.2
+        uses: actions/setup-node@v7
         with:
-          node-version: 18
+          node-version: 22
+          cache: pnpm
 
       - name: "Generate schema.graphql from Business API"
         shell: bash
@@ -25,8 +29,7 @@ jobs:
           VISMA_CLIENT_ID: ${{ secrets.VISMA_CLIENT_ID }}
           VISMA_CLIENT_SECRET: ${{ secrets.VISMA_CLIENT_SECRET }}
         run: |
-          npm install -g pnpm
-          pnpm i
+          pnpm i --frozen-lockfile
           pnpm update-schema
 
       - name: Check for file changes & commit files

@@ -13,6 +13,7 @@
   "keywords": [],
   "author": "Ole Melhus",
   "license": "MIT",
+  "packageManager": "pnpm@12.6.0",
   "dependencies": {
     "@graphql-typed-document-node/core": "^3.2.0",
     "graphql": "^16.8.1",
