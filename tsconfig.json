@@ -4,10 +4,9 @@
     "moduleResolution": "Bundler",
     "module": "ES6",
     "esModuleInterop": true,
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["*"],
-      "~/*": ["src/*"]
+      "@/*": ["./*"],
+      "~/*": ["./src/*"]
     }
   }
 }
