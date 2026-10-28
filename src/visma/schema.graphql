@@ -16757,7 +16757,7 @@ type Associate {
   """LstDelDt/6387 (date value)"""
   lastDeliveryNoteDateAsDate: Date
 
-  """[S(156)] ExtID/6415"""
+  """[indexed] [S(156)] ExtID/6415"""
   externalId: String
 
   """ChExt/6416"""
@@ -40008,7 +40008,7 @@ type Associate_CountConnectionAggregate {
   """LstDelDt/6387"""
   lastDeliveryNoteDate: Int
 
-  """[S(156)] ExtID/6415"""
+  """[indexed] [S(156)] ExtID/6415"""
   externalId: Int
 
   """ChExt/6416"""
@@ -40801,7 +40801,7 @@ type Associate_Associate_via_ContactFor_Connection {
 }
 
 """
-Filter conditions for this table. Filtering is fastest on indexed fields - these are quick to filter on directly: associateNo, customerNo, supplierNo, employeeNo, userName, copyOfCustomerNo, copyOfSupplierNo, copyOfEmployeeNo, copyOfUserName, name, contactFor. Other fields work too, but can be slow on large tables. Each field's own description says how to use it efficiently.
+Filter conditions for this table. Filtering is fastest on indexed fields - these are quick to filter on directly: associateNo, customerNo, supplierNo, employeeNo, userName, copyOfCustomerNo, copyOfSupplierNo, copyOfEmployeeNo, copyOfUserName, name, contactFor, externalId. Other fields work too, but can be slow on large tables. Each field's own description says how to use it efficiently.
 """
 input FilterExpression_Associate {
   customerPriceGroup2: Int32_FilterClause
@@ -41023,6 +41023,15 @@ input FilterExpression_Associate {
   deliveryNoteInterval: Int16_FilterClause
   lastDeliveryNoteDate: Int32_FilterClause
   lastDeliveryNoteDateAsDate: Date_FilterClause
+
+  """
+  This field is indexed - filtering by it is fast.
+  
+  Example:
+  ```graphql
+  filter: { externalId: { _eq: $value } }
+  ```
+  """
   externalId: LimitedString_FilterClause
   changedExternally: Decimal_FilterClause
   mainAssociateNo: Int32_FilterClause
@@ -55398,7 +55407,7 @@ input ActiveSession_ChangedByProvenance_ProvenanceDomain_FilterClause {
 }
 
 """
-Filter conditions for this table. Filtering is fastest on indexed fields - these are quick to filter on directly: userName. Other fields work too, but can be slow on large tables. Each field's own description says how to use it efficiently.
+Filter conditions for this table. Filtering is fastest on indexed fields - these are quick to filter on directly: userName, autoInvoiceUserApiKey. Other fields work too, but can be slow on large tables. Each field's own description says how to use it efficiently.
 """
 input FilterExpression_User {
   """
@@ -55465,6 +55474,15 @@ input FilterExpression_User {
   textLanguageNo: Int8_FilterClause
   textLanguageNoAsEnum: User_TextLanguageNo_TextLanguageNoDomain_FilterClause
   languageNo: Int32_FilterClause
+
+  """
+  This field is indexed - filtering by it is fast.
+  
+  Example:
+  ```graphql
+  filter: { autoInvoiceUserApiKey: { _eq: $value } }
+  ```
+  """
   autoInvoiceUserApiKey: LimitedString_FilterClause
   vudStaticId: LimitedString_FilterClause
   createdDate: Int32_FilterClause
@@ -57934,6 +57952,15 @@ enum OrderMatchingStatusDomain {
 
   """Dec=17, Hex=11"""
   OrderMatchOnTotalsOrderBookingCompletedAutomatically
+
+  """Dec=18, Hex=12"""
+  PreRegistrationSetupIncomplete
+
+  """Dec=19, Hex=13"""
+  PreRegistrationBatchNotUpdated
+
+  """Dec=20, Hex=14"""
+  PreRegisteredNotMatched
 }
 
 input Document_CreatedByProvenance_ProvenanceDomain_FilterClause {
@@ -72864,7 +72891,7 @@ input ProductAlternative_TransactionTypes_TransactionTypesDomain_FilterClause {
   _is_off: TransactionTypesDomain
 }
 
-"""Domain 2100***Transaction types"""
+"""Domain Transaction types"""
 enum TransactionTypesDomain {
   """Dec=1, Hex=1"""
   Sales
@@ -75458,6 +75485,8 @@ input OrderBy_Associate {
   documentDeliveryMethod1: SortOrder
   deliveryNoteInterval: SortOrder
   lastDeliveryNoteDate: SortOrder
+
+  """This field is indexed - sorting by it is fast."""
   externalId: SortOrder
   changedExternally: SortOrder
   mainAssociateNo: SortOrder
@@ -75996,7 +76025,7 @@ input Associate_GroupByType {
   """LstDelDt/6387"""
   lastDeliveryNoteDate: GroupingKind
 
-  """[S(156)] ExtID/6415"""
+  """[indexed] [S(156)] ExtID/6415"""
   externalId: GroupingKind
 
   """ChExt/6416"""
@@ -88644,7 +88673,7 @@ input User_GroupByType {
   """LangNo/15977"""
   languageNo: GroupingKind
 
-  """[S(80)] MavKey/16454"""
+  """[indexed] [S(80)] MavKey/16454"""
   autoInvoiceUserApiKey: GroupingKind
 
   """[S(40)] VudStId/16485"""
@@ -110720,6 +110749,15 @@ input Associate_HavingType {
   deliveryNoteInterval: Int16_FilterClause
   lastDeliveryNoteDate: Int32_FilterClause
   lastDeliveryNoteDateAsDate: Date_FilterClause
+
+  """
+  This field is indexed - filtering by it is fast.
+  
+  Example:
+  ```graphql
+  filter: { externalId: { _eq: $value } }
+  ```
+  """
   externalId: LimitedString_FilterClause
   changedExternally: Decimal_FilterClause
   mainAssociateNo: Int32_FilterClause
@@ -129411,6 +129449,15 @@ input User_HavingType {
   textLanguageNo: Int8_FilterClause
   textLanguageNoAsEnum: User_TextLanguageNo_TextLanguageNoDomain_FilterClause
   languageNo: Int32_FilterClause
+
+  """
+  This field is indexed - filtering by it is fast.
+  
+  Example:
+  ```graphql
+  filter: { autoInvoiceUserApiKey: { _eq: $value } }
+  ```
+  """
   autoInvoiceUserApiKey: LimitedString_FilterClause
   vudStaticId: LimitedString_FilterClause
   createdDate: Int32_FilterClause
@@ -615386,7 +615433,7 @@ type User {
   """LangNo/15977"""
   languageNo: Int
 
-  """[S(80)] MavKey/16454"""
+  """[indexed] [S(80)] MavKey/16454"""
   autoInvoiceUserApiKey: String
 
   """[S(40)] VudStId/16485"""
@@ -616391,7 +616438,7 @@ type User_CountConnectionAggregate {
   """LangNo/15977"""
   languageNo: Int
 
-  """[S(80)] MavKey/16454"""
+  """[indexed] [S(80)] MavKey/16454"""
   autoInvoiceUserApiKey: Int
 
   """[S(40)] VudStId/16485"""
@@ -617373,6 +617420,8 @@ input OrderBy_User {
   alternatingRowColor: SortOrder
   textLanguageNo: SortOrder
   languageNo: SortOrder
+
+  """This field is indexed - sorting by it is fast."""
   autoInvoiceUserApiKey: SortOrder
   vudStaticId: SortOrder
   createdDate: SortOrder
@@ -735462,7 +735511,7 @@ type Associate_CountAggregate {
   """LstDelDt/6387"""
   lastDeliveryNoteDate: Int
 
-  """[S(156)] ExtID/6415"""
+  """[indexed] [S(156)] ExtID/6415"""
   externalId: Int
 
   """ChExt/6416"""
@@ -736647,7 +736696,7 @@ type AssociateDistinct {
   """LstDelDt/6387 (date value)"""
   lastDeliveryNoteDateAsDate: [Date]
 
-  """[S(156)] ExtID/6415"""
+  """[indexed] [S(156)] ExtID/6415"""
   externalId: [String]
 
   """ChExt/6416"""
@@ -894845,6 +894894,9 @@ enum EmailConfigProcessingDomain {
 
   """Dec=128, Hex=80"""
   GoogleOAuth2
+
+  """Dec=256, Hex=100"""
+  UseThirdPartyEmailProvider
 }
 
 """
@@ -926035,7 +926087,7 @@ type User_CountAggregate {
   """LangNo/15977"""
   languageNo: Int
 
-  """[S(80)] MavKey/16454"""
+  """[indexed] [S(80)] MavKey/16454"""
   autoInvoiceUserApiKey: Int
 
   """[S(40)] VudStId/16485"""
@@ -926371,7 +926423,7 @@ type UserDistinct {
   """LangNo/15977"""
   languageNo: [Int]
 
-  """[S(80)] MavKey/16454"""
+  """[indexed] [S(80)] MavKey/16454"""
   autoInvoiceUserApiKey: [String]
 
   """[S(40)] VudStId/16485"""
@@ -971700,6 +971752,7 @@ type Mutation_UseCompany {
   allProductTransaction_processings: AllProductTransactionProcessings
   invoiceResponse_processings: InvoiceResponseProcessings
   associateRole_processings: AssociateRoleProcessings
+  intercompanyPosting_processings: IntercompanyPostingProcessings
   associate_reports: AssociateReports
   customerDocument_reports: CustomerDocumentReports
   bankPartner_reports: BankPartnerReports
@@ -972202,7 +972255,7 @@ input Associate_Input {
   """LstDelDt/6387 (date value)"""
   lastDeliveryNoteDateAsDate: Date
 
-  """[S(156)] ExtID/6415"""
+  """[indexed] [S(156)] ExtID/6415"""
   externalId: String
 
   """ChExt/6416"""
@@ -1021072,7 +1021125,7 @@ type BatchProcessings {
   ): BatchProcessings_RejectIncomingInvoice
 
   """
-  2100***Checks the invoice against the active supplier contracts and auto approves it on a match
+  Checks the invoice against the active supplier contracts and approves it automatically on a match
   """
   sendToAutoApprove(
     """An object that defines the filter for the processing"""
@@ -1021080,7 +1021133,7 @@ type BatchProcessings {
     args: BatchProcessings_SendToAutoApprove_Parameters
   ): BatchProcessings_SendToAutoApprove
 
-  """2100***Creates a supplier contract from the selected invoices"""
+  """Creates a supplier contract from the selected invoices"""
   createSupplierContract(
     """An object that defines the filter for the processing"""
     filter: FilterExpression_Batch
@@ -1021661,6 +1021714,12 @@ type UpdatedBatchProcessings {
     filter: FilterExpression_UpdatedBatch
     args: UpdatedBatchProcessings_ViewDocuments_Parameters
   ): UpdatedBatchProcessings_ViewDocuments
+
+  """Posts the pending intercompany postings to their corporate companies"""
+  postToCorporateCompany(
+    """An object that defines the filter for the processing"""
+    filter: FilterExpression_UpdatedBatch
+  ): UpdatedBatchProcessings_PostToCorporateCompany
 }
 
 type UpdatedBatchProcessings_CreateNewBatch {
@@ -1021721,6 +1021780,10 @@ type UpdatedBatchProcessings_ViewDocuments_Items_Files {
 
 input UpdatedBatchProcessings_ViewDocuments_Parameters {
   returnFileBytes: Byte
+}
+
+type UpdatedBatchProcessings_PostToCorporateCompany {
+  succeeded: Boolean
 }
 
 type UpdatedVoucherProcessings {
@@ -1023455,7 +1023518,7 @@ type AutopayLogProcessings {
   ): AutopayLogProcessings_ProcessFile
 
   """
-  2100***Create a payment transfer log entry from an uploaded file, ready to be processed
+  Create a payment transfer log entry from an uploaded file, ready to be processed
   """
   importFile(
     """An object that defines the filter for the processing"""
@@ -1023679,7 +1023742,7 @@ type IncomingAccountingDocumentProcessings {
     args: IncomingAccountingDocumentProcessings_ViewDocuments_Parameters
   ): IncomingAccountingDocumentProcessings_ViewDocuments
 
-  """2100***Creates a supplier contract from the selected invoices"""
+  """Creates a supplier contract from the selected invoices"""
   createSupplierContract(
     """An object that defines the filter for the processing"""
     filter: FilterExpression_IncomingAccountingDocument
@@ -1024183,6 +1024246,18 @@ type AssociateRoleProcessings {
 }
 
 type AssociateRoleProcessings_SynchronizeRoles {
+  succeeded: Boolean
+}
+
+type IntercompanyPostingProcessings {
+  """Posts the pending intercompany postings to their corporate companies"""
+  postToCorporateCompany(
+    """An object that defines the filter for the processing"""
+    filter: FilterExpression_IntercompanyPosting
+  ): IntercompanyPostingProcessings_PostToCorporateCompany
+}
+
+type IntercompanyPostingProcessings_PostToCorporateCompany {
   succeeded: Boolean
 }
 
@@ -1024986,7 +1025061,7 @@ input Associate_BreakBy {
   """LstDelDt/6387"""
   lastDeliveryNoteDate: Boolean
 
-  """[S(156)] ExtID/6415"""
+  """[indexed] [S(156)] ExtID/6415"""
   externalId: Boolean
 
   """ChExt/6416"""
@@ -1035803,7 +1035878,7 @@ input User_Input {
   """LangNo/15977"""
   languageNo: Int
 
-  """[S(80)] MavKey/16454"""
+  """[indexed] [S(80)] MavKey/16454"""
   autoInvoiceUserApiKey: String
 
   """[S(40)] VudStId/16485"""
