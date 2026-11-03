@@ -14616,6 +14616,63 @@ type Query_UseCompany {
     filter: FilterExpression_IncomingAccountingDocumentAttachment
   ): Query_UseCompany_IncomingAccountingDocumentAttachmentAggregate_Node @deprecated(reason: "This field is deprecated and will be removed. Use grouping alternatives instead.")
 
+  """A field for accessing the data from the table `AutoInvoiceDetectLog`"""
+  autoInvoiceDetectLog(
+    """An object that defines the filter for the search"""
+    filter: FilterExpression_AutoInvoiceDetectLog
+
+    """If true, only distinct values will be returned."""
+    distinct: Boolean
+
+    """The number of items to skip before retrieving others."""
+    skip: Int
+
+    """The maximum number of items to return for forward pagination."""
+    first: Int
+
+    """The maximum number of items to return for backward pagination."""
+    last: Int
+
+    """
+    The cursor of the last item in the previous page. Used for forward pagination only.
+    """
+    after: String
+
+    """Include the record indicated by the after cursor."""
+    includeAfter: Boolean
+
+    """
+    The cursor of the first item in the next page. User for backward pagination only.
+    """
+    before: String
+
+    """Include the record indicated by the before cursor."""
+    includeBefore: Boolean
+
+    """
+    Performs the query in an unoptimized way. Should be used for queries that fetch nested data from a one-to-many relation.
+    """
+    unoptimized: Boolean
+
+    """[Deprecated] An object that defines the sort order for the results"""
+    sortOrder: OrderBy_AutoInvoiceDetectLog
+
+    """The list of columns to order by"""
+    orderBy: [OrderBy_AutoInvoiceDetectLog!]
+
+    """The list of columns to group by"""
+    groupBy: [AutoInvoiceDetectLog_GroupByType!]
+
+    """Filter expression for aggregaged columns"""
+    having: AutoInvoiceDetectLog_HavingType
+  ): Query_UseCompany_AutoInvoiceDetectLog_Connection
+
+  """A field for aggregate functions for the table `AutoInvoiceDetectLog`."""
+  autoInvoiceDetectLog_aggregate(
+    """An object that defines the filter for the search"""
+    filter: FilterExpression_AutoInvoiceDetectLog
+  ): Query_UseCompany_AutoInvoiceDetectLogAggregate_Node @deprecated(reason: "This field is deprecated and will be removed. Use grouping alternatives instead.")
+
   """
   A field for accessing the data from the table `AutoInvoiceValidationError`
   """
@@ -57009,6 +57066,9 @@ input FilterExpression_IncomingAccountingDocument {
   createdByProvenanceAsEnum: IncomingAccountingDocument_CreatedByProvenance_ProvenanceDomain_FilterClause
   changedByProvenance: Int32_FilterClause
   changedByProvenanceAsEnum: IncomingAccountingDocument_ChangedByProvenance_ProvenanceDomain_FilterClause
+  autoInvoiceDetectStatus: Int32_FilterClause
+  autoInvoiceDetectStatusAsEnum: IncomingAccountingDocument_AutoInvoiceDetectStatus_AutoInvoiceDetectStatusDomain_FilterClause
+  autoInvoiceDetectLogNo: Int32_FilterClause
   changedDateTime: DateTime_FilterClause
   changedDateTimeTZ: DateTime_FilterClause
   createdDateTime: DateTime_FilterClause
@@ -57034,6 +57094,9 @@ input FilterExpression_IncomingAccountingDocument {
 
   """Filter on the related Batch records"""
   joinup_Batch: FilterExpression_Batch
+
+  """Filter on the related AutoInvoiceDetectLog records"""
+  joinup_AutoInvoiceDetectLog: FilterExpression_AutoInvoiceDetectLog
 }
 
 input IncomingAccountingDocument_IncomingAccountingDocumentOrigin_IncomingAccountingDocumentOriginDomain_FilterClause {
@@ -57066,6 +57129,9 @@ enum IncomingAccountingDocumentOriginDomain {
 
   """Dec=7, Hex=7"""
   AutoCollect
+
+  """Dec=8, Hex=8"""
+  DocScan
 }
 
 input IncomingAccountingDocument_IncomingAccountingDocumentStatus_IncomingAccountingDocumentStatusDomain_FilterClause {
@@ -57216,6 +57282,41 @@ input IncomingAccountingDocument_ChangedByProvenance_ProvenanceDomain_FilterClau
 
   """NotEqualTo"""
   _not_eq: ProvenanceDomain
+}
+
+input IncomingAccountingDocument_AutoInvoiceDetectStatus_AutoInvoiceDetectStatusDomain_FilterClause {
+  """EqualTo"""
+  _eq: AutoInvoiceDetectStatusDomain
+
+  """NotEqualTo"""
+  _not_eq: AutoInvoiceDetectStatusDomain
+}
+
+"""Domain 2100***AutoInvoice Detect status"""
+enum AutoInvoiceDetectStatusDomain {
+  """Dec=0, Hex=0"""
+  NotAnalysed
+
+  """Dec=1, Hex=1"""
+  Pending
+
+  """Dec=2, Hex=2"""
+  Ok
+
+  """Dec=3, Hex=3"""
+  Warning
+
+  """Dec=4, Hex=4"""
+  Failed
+
+  """Dec=5, Hex=5"""
+  CheckError
+
+  """Dec=6, Hex=6"""
+  NotApplicable
+
+  """Dec=7, Hex=7"""
+  Unavailable
 }
 
 """
@@ -59846,6 +59947,9 @@ enum OriginDomain {
 
   """Dec=49, Hex=31"""
   Central
+
+  """Dec=50, Hex=32"""
+  IntercompanyPosting
 }
 
 input Batch_EditStatus_EditStatusDomain_FilterClause {
@@ -72769,6 +72873,143 @@ input OssTaxTerm_CollectionFilter {
   _some: FilterExpression_OssTaxTerm
   _all: FilterExpression_OssTaxTerm
   _none: FilterExpression_OssTaxTerm
+}
+
+"""
+Filter conditions for this table. Filtering is fastest on indexed fields - these are quick to filter on directly: autoInvoiceDetectLogNo, incomingAccountingDocumentNo. Other fields work too, but can be slow on large tables. Each field's own description says how to use it efficiently.
+"""
+input FilterExpression_AutoInvoiceDetectLog {
+  """
+  This field is indexed - filtering by it is fast.
+  
+  Example:
+  ```graphql
+  filter: { autoInvoiceDetectLogNo: { _eq: $value } }
+  ```
+  """
+  autoInvoiceDetectLogNo: Int32_FilterClause
+
+  """
+  This field is indexed - filtering by it is fast.
+  
+  Example:
+  ```graphql
+  filter: { incomingAccountingDocumentNo: { _eq: $value } }
+  ```
+  """
+  incomingAccountingDocumentNo: Int32_FilterClause
+  externalDocumentId: LimitedString_FilterClause
+  triggeredTimestamp: Timestamp_FilterClause
+  source: Int32_FilterClause
+  sourceAsEnum: AutoInvoiceDetectLog_Source_AutoInvoiceDetectSourceDomain_FilterClause
+  autoInvoiceDetectFlags: Int32_FilterClause
+  autoInvoiceDetectFlagsFlags: AutoInvoiceDetectLog_AutoInvoiceDetectFlags_AutoInvoiceDetectFlagsDomain_FilterClause
+  resultJson: Blob_FilterClause
+  changedDate: Int32_FilterClause
+  changedDateAsDate: Date_FilterClause
+  changedTime: Int16_FilterClause
+  changedTimeAsTime: Time_FilterClause
+  changedByUser: LimitedString_FilterClause
+  editStatus: Int8_FilterClause
+  editStatusAsEnum: AutoInvoiceDetectLog_EditStatus_EditStatusDomain_FilterClause
+  lockedByProcessNo: Int32_FilterClause
+  createdDate: Int32_FilterClause
+  createdDateAsDate: Date_FilterClause
+  createdTime: Int16_FilterClause
+  createdTimeAsTime: Time_FilterClause
+  createdByUser: LimitedString_FilterClause
+  changedTimestamp: Timestamp_FilterClause
+  createdTimestamp: Timestamp_FilterClause
+  createdByProvenance: Int32_FilterClause
+  createdByProvenanceAsEnum: AutoInvoiceDetectLog_CreatedByProvenance_ProvenanceDomain_FilterClause
+  changedByProvenance: Int32_FilterClause
+  changedByProvenanceAsEnum: AutoInvoiceDetectLog_ChangedByProvenance_ProvenanceDomain_FilterClause
+  changedDateTime: DateTime_FilterClause
+  changedDateTimeTZ: DateTime_FilterClause
+  createdDateTime: DateTime_FilterClause
+  createdDateTimeTZ: DateTime_FilterClause
+  _and: [FilterExpression_AutoInvoiceDetectLog]
+  _or: [FilterExpression_AutoInvoiceDetectLog]
+  extensions: FilterColumnExtension
+
+  """Filter on the related IncomingAccountingDocument records"""
+  joinup_IncomingAccountingDocument: FilterExpression_IncomingAccountingDocument
+}
+
+input AutoInvoiceDetectLog_Source_AutoInvoiceDetectSourceDomain_FilterClause {
+  """EqualTo"""
+  _eq: AutoInvoiceDetectSourceDomain
+
+  """NotEqualTo"""
+  _not_eq: AutoInvoiceDetectSourceDomain
+}
+
+"""Domain 2100***Detect source"""
+enum AutoInvoiceDetectSourceDomain {
+  """Dec=1, Hex=1"""
+  Download
+
+  """Dec=2, Hex=2"""
+  Refresh
+
+  """Dec=3, Hex=3"""
+  UserRerun
+}
+
+input AutoInvoiceDetectLog_AutoInvoiceDetectFlags_AutoInvoiceDetectFlagsDomain_FilterClause {
+  """EqualTo"""
+  _eq: AutoInvoiceDetectFlagsDomain
+
+  """NotEqualTo"""
+  _not_eq: AutoInvoiceDetectFlagsDomain
+
+  """IsOn"""
+  _is_on: AutoInvoiceDetectFlagsDomain
+
+  """IsOff"""
+  _is_off: AutoInvoiceDetectFlagsDomain
+}
+
+"""Domain 2100***Detect findings"""
+enum AutoInvoiceDetectFlagsDomain {
+  """Dec=1, Hex=1"""
+  Vat
+
+  """Dec=2, Hex=2"""
+  SupplierActivation
+
+  """Dec=4, Hex=4"""
+  SenderBidStatus
+
+  """Dec=8, Hex=8"""
+  SenderWarningList
+
+  """Dec=16, Hex=10"""
+  BankAccountChanged
+}
+
+input AutoInvoiceDetectLog_EditStatus_EditStatusDomain_FilterClause {
+  """EqualTo"""
+  _eq: EditStatusDomain
+
+  """NotEqualTo"""
+  _not_eq: EditStatusDomain
+}
+
+input AutoInvoiceDetectLog_CreatedByProvenance_ProvenanceDomain_FilterClause {
+  """EqualTo"""
+  _eq: ProvenanceDomain
+
+  """NotEqualTo"""
+  _not_eq: ProvenanceDomain
+}
+
+input AutoInvoiceDetectLog_ChangedByProvenance_ProvenanceDomain_FilterClause {
+  """EqualTo"""
+  _eq: ProvenanceDomain
+
+  """NotEqualTo"""
+  _not_eq: ProvenanceDomain
 }
 
 """
@@ -89804,6 +90045,12 @@ input IncomingAccountingDocument_GroupByType {
   """ChPvn/21716"""
   changedByProvenance: GroupingKind
 
+  """AiDetSt/22180"""
+  autoInvoiceDetectStatus: GroupingKind
+
+  """AiDetLogNo/22181"""
+  autoInvoiceDetectLogNo: GroupingKind
+
   """ChDt/17933 + ChTm/17934 (datetime value)"""
   changedDateTime: GroupingKind
 
@@ -89830,6 +90077,9 @@ input IncomingAccountingDocument_GroupByType {
 
   """Group by a column on the related Batch records"""
   joinup_Batch: Batch_GroupByType
+
+  """Group by a column on the related AutoInvoiceDetectLog records"""
+  joinup_AutoInvoiceDetectLog: AutoInvoiceDetectLog_GroupByType
 }
 
 """Table "VoSr" (87)."""
@@ -108163,6 +108413,78 @@ input SupplierContract_GroupByType {
 
   """Group by a column on the related Associate records"""
   joinup_Associate_via_ResponsibleEmployee: Associate_GroupByType
+}
+
+"""Table "AiDetLog" (488)."""
+input AutoInvoiceDetectLog_GroupByType {
+  """[PK] [indexed] AiDetLogNo/22182"""
+  autoInvoiceDetectLogNo: GroupingKind
+
+  """[indexed] InAcDocNo/22183"""
+  incomingAccountingDocumentNo: GroupingKind
+
+  """[S(40)] ExtDocId/22184"""
+  externalDocumentId: GroupingKind
+
+  """TrigTs/22185"""
+  triggeredTimestamp: GroupingKind
+
+  """Src/22186"""
+  source: GroupingKind
+
+  """DetFlg/22187"""
+  autoInvoiceDetectFlags: GroupingKind
+
+  """[B] ResJson/22188"""
+  resultJson: GroupingKind
+
+  """ChDt/22189"""
+  changedDate: GroupingKind
+
+  """ChTm/22190"""
+  changedTime: GroupingKind
+
+  """[S(24)] ChUsr/22191"""
+  changedByUser: GroupingKind
+
+  """LckSt/22192"""
+  editStatus: GroupingKind
+
+  """ChPrc/22193"""
+  lockedByProcessNo: GroupingKind
+
+  """CreDt/22195"""
+  createdDate: GroupingKind
+
+  """CreTm/22196"""
+  createdTime: GroupingKind
+
+  """[S(24)] CreUsr/22197"""
+  createdByUser: GroupingKind
+
+  """ChTs/22198"""
+  changedTimestamp: GroupingKind
+
+  """CreTs/22199"""
+  createdTimestamp: GroupingKind
+
+  """CrePvn/22200"""
+  createdByProvenance: GroupingKind
+
+  """ChPvn/22201"""
+  changedByProvenance: GroupingKind
+
+  """ChDt/22189 + ChTm/22190 (datetime value)"""
+  changedDateTime: GroupingKind
+
+  """CreDt/22195 + CreTm/22196 (datetime value)"""
+  createdDateTime: GroupingKind
+
+  """Grouping extensions"""
+  extensions: GroupColumnExtension
+
+  """Group by a column on the related IncomingAccountingDocument records"""
+  joinup_IncomingAccountingDocument: IncomingAccountingDocument_GroupByType
 }
 
 """Table "ProdAlt" (484)."""
@@ -131439,6 +131761,9 @@ input IncomingAccountingDocument_HavingType {
   createdByProvenanceAsEnum: IncomingAccountingDocument_CreatedByProvenance_ProvenanceDomain_FilterClause
   changedByProvenance: Int32_FilterClause
   changedByProvenanceAsEnum: IncomingAccountingDocument_ChangedByProvenance_ProvenanceDomain_FilterClause
+  autoInvoiceDetectStatus: Int32_FilterClause
+  autoInvoiceDetectStatusAsEnum: IncomingAccountingDocument_AutoInvoiceDetectStatus_AutoInvoiceDetectStatusDomain_FilterClause
+  autoInvoiceDetectLogNo: Int32_FilterClause
 
   """A node for computing the sum aggregate."""
   _sum: HavingExpression_IncomingAccountingDocument
@@ -131520,6 +131845,11 @@ input IncomingAccountingDocument_HavingType {
   Filter the grouped result by a column or aggregate on the related Batch records
   """
   joinup_Batch: Batch_HavingType
+
+  """
+  Filter the grouped result by a column or aggregate on the related AutoInvoiceDetectLog records
+  """
+  joinup_AutoInvoiceDetectLog: AutoInvoiceDetectLog_HavingType
   _and: [IncomingAccountingDocument_HavingType]
   _or: [IncomingAccountingDocument_HavingType]
 }
@@ -131568,6 +131898,8 @@ input HavingExpression_IncomingAccountingDocument {
   externalIdVoucher: LimitedString_AggregateFilterClause
   createdByProvenance: Int32_AggregateFilterClause
   changedByProvenance: Int32_AggregateFilterClause
+  autoInvoiceDetectStatus: Int32_AggregateFilterClause
+  autoInvoiceDetectLogNo: Int32_AggregateFilterClause
 
   """Extensions for aggregate expression"""
   extensions: HavingColumnExtension
@@ -131611,6 +131943,8 @@ input CountHavingExpression_IncomingAccountingDocument {
   externalIdVoucher: Int32_CountAggregateFilterClause
   createdByProvenance: Int32_CountAggregateFilterClause
   changedByProvenance: Int32_CountAggregateFilterClause
+  autoInvoiceDetectStatus: Int32_CountAggregateFilterClause
+  autoInvoiceDetectLogNo: Int32_CountAggregateFilterClause
 
   """Extensions for aggregate expression"""
   extensions: HavingColumnExtension
@@ -155652,6 +155986,166 @@ input CountHavingExpression_SupplierContract {
   responsibleEmployeeNo: Int32_CountAggregateFilterClause
   status: Int32_CountAggregateFilterClause
   version: Int32_CountAggregateFilterClause
+  changedDate: Int32_CountAggregateFilterClause
+  changedTime: Int32_CountAggregateFilterClause
+  changedByUser: Int32_CountAggregateFilterClause
+  editStatus: Int32_CountAggregateFilterClause
+  lockedByProcessNo: Int32_CountAggregateFilterClause
+  createdDate: Int32_CountAggregateFilterClause
+  createdTime: Int32_CountAggregateFilterClause
+  createdByUser: Int32_CountAggregateFilterClause
+  changedTimestamp: Int32_CountAggregateFilterClause
+  createdTimestamp: Int32_CountAggregateFilterClause
+  createdByProvenance: Int32_CountAggregateFilterClause
+  changedByProvenance: Int32_CountAggregateFilterClause
+
+  """Extensions for aggregate expression"""
+  extensions: HavingColumnExtension
+}
+
+input AutoInvoiceDetectLog_HavingType {
+  """
+  This field is indexed - filtering by it is fast.
+  
+  Example:
+  ```graphql
+  filter: { autoInvoiceDetectLogNo: { _eq: $value } }
+  ```
+  """
+  autoInvoiceDetectLogNo: Int32_FilterClause
+
+  """
+  This field is indexed - filtering by it is fast.
+  
+  Example:
+  ```graphql
+  filter: { incomingAccountingDocumentNo: { _eq: $value } }
+  ```
+  """
+  incomingAccountingDocumentNo: Int32_FilterClause
+  externalDocumentId: LimitedString_FilterClause
+  triggeredTimestamp: Timestamp_FilterClause
+  source: Int32_FilterClause
+  sourceAsEnum: AutoInvoiceDetectLog_Source_AutoInvoiceDetectSourceDomain_FilterClause
+  autoInvoiceDetectFlags: Int32_FilterClause
+  autoInvoiceDetectFlagsFlags: AutoInvoiceDetectLog_AutoInvoiceDetectFlags_AutoInvoiceDetectFlagsDomain_FilterClause
+  resultJson: Blob_FilterClause
+  changedDate: Int32_FilterClause
+  changedDateAsDate: Date_FilterClause
+  changedTime: Int16_FilterClause
+  changedTimeAsTime: Time_FilterClause
+  changedByUser: LimitedString_FilterClause
+  editStatus: Int8_FilterClause
+  editStatusAsEnum: AutoInvoiceDetectLog_EditStatus_EditStatusDomain_FilterClause
+  lockedByProcessNo: Int32_FilterClause
+  createdDate: Int32_FilterClause
+  createdDateAsDate: Date_FilterClause
+  createdTime: Int16_FilterClause
+  createdTimeAsTime: Time_FilterClause
+  createdByUser: LimitedString_FilterClause
+  changedTimestamp: Timestamp_FilterClause
+  createdTimestamp: Timestamp_FilterClause
+  createdByProvenance: Int32_FilterClause
+  createdByProvenanceAsEnum: AutoInvoiceDetectLog_CreatedByProvenance_ProvenanceDomain_FilterClause
+  changedByProvenance: Int32_FilterClause
+  changedByProvenanceAsEnum: AutoInvoiceDetectLog_ChangedByProvenance_ProvenanceDomain_FilterClause
+
+  """A node for computing the sum aggregate."""
+  _sum: HavingExpression_AutoInvoiceDetectLog
+
+  """A node for computing the sumDistinct aggregate."""
+  _sumDistinct: HavingExpression_AutoInvoiceDetectLog
+
+  """A node for computing the average aggregate."""
+  _average: HavingExpression_AutoInvoiceDetectLog
+
+  """A node for computing the averageDistinct aggregate."""
+  _averageDistinct: HavingExpression_AutoInvoiceDetectLog
+
+  """A node for computing the count aggregate."""
+  _count: CountHavingExpression_AutoInvoiceDetectLog
+
+  """A node for computing the countDistinct aggregate."""
+  _countDistinct: CountHavingExpression_AutoInvoiceDetectLog
+
+  """A node for computing the minimum aggregate."""
+  _minimum: HavingExpression_AutoInvoiceDetectLog
+
+  """A node for computing the maximum aggregate."""
+  _maximum: HavingExpression_AutoInvoiceDetectLog
+
+  """A node for computing the variance aggregate."""
+  _variance: HavingExpression_AutoInvoiceDetectLog
+
+  """A node for computing the varianceDistinct aggregate."""
+  _varianceDistinct: HavingExpression_AutoInvoiceDetectLog
+
+  """A node for computing the variancePopulation aggregate."""
+  _variancePopulation: HavingExpression_AutoInvoiceDetectLog
+
+  """A node for computing the variancePopulationDistinct aggregate."""
+  _variancePopulationDistinct: HavingExpression_AutoInvoiceDetectLog
+
+  """A node for computing the standardDeviation aggregate."""
+  _standardDeviation: HavingExpression_AutoInvoiceDetectLog
+
+  """A node for computing the standardDeviationDistinct aggregate."""
+  _standardDeviationDistinct: HavingExpression_AutoInvoiceDetectLog
+
+  """A node for computing the standardDeviationPopulation aggregate."""
+  _standardDeviationPopulation: HavingExpression_AutoInvoiceDetectLog
+
+  """
+  A node for computing the standardDeviationPopulationDistinct aggregate.
+  """
+  _standardDeviationPopulationDistinct: HavingExpression_AutoInvoiceDetectLog
+  extensions: HavingColumnExtension
+
+  """
+  Filter the grouped result by a column or aggregate on the related IncomingAccountingDocument records
+  """
+  joinup_IncomingAccountingDocument: IncomingAccountingDocument_HavingType
+  _and: [AutoInvoiceDetectLog_HavingType]
+  _or: [AutoInvoiceDetectLog_HavingType]
+}
+
+input HavingExpression_AutoInvoiceDetectLog {
+  autoInvoiceDetectLogNo: Int32_AggregateFilterClause
+  incomingAccountingDocumentNo: Int32_AggregateFilterClause
+  externalDocumentId: LimitedString_AggregateFilterClause
+  triggeredTimestamp: Timestamp_AggregateFilterClause
+  source: Int32_AggregateFilterClause
+  autoInvoiceDetectFlags: Int32_AggregateFilterClause
+  resultJson: Blob_AggregateFilterClause
+  changedDate: Int32_AggregateFilterClause
+  changedDateAsDate: Date_FilterClause
+  changedTime: Int16_AggregateFilterClause
+  changedTimeAsTime: Time_FilterClause
+  changedByUser: LimitedString_AggregateFilterClause
+  editStatus: Int8_AggregateFilterClause
+  lockedByProcessNo: Int32_AggregateFilterClause
+  createdDate: Int32_AggregateFilterClause
+  createdDateAsDate: Date_FilterClause
+  createdTime: Int16_AggregateFilterClause
+  createdTimeAsTime: Time_FilterClause
+  createdByUser: LimitedString_AggregateFilterClause
+  changedTimestamp: Timestamp_AggregateFilterClause
+  createdTimestamp: Timestamp_AggregateFilterClause
+  createdByProvenance: Int32_AggregateFilterClause
+  changedByProvenance: Int32_AggregateFilterClause
+
+  """Extensions for aggregate expression"""
+  extensions: HavingColumnExtension
+}
+
+input CountHavingExpression_AutoInvoiceDetectLog {
+  autoInvoiceDetectLogNo: Int32_CountAggregateFilterClause
+  incomingAccountingDocumentNo: Int32_CountAggregateFilterClause
+  externalDocumentId: Int32_CountAggregateFilterClause
+  triggeredTimestamp: Int32_CountAggregateFilterClause
+  source: Int32_CountAggregateFilterClause
+  autoInvoiceDetectFlags: Int32_CountAggregateFilterClause
+  resultJson: Int32_CountAggregateFilterClause
   changedDate: Int32_CountAggregateFilterClause
   changedTime: Int32_CountAggregateFilterClause
   changedByUser: Int32_CountAggregateFilterClause
@@ -311729,6 +312223,15 @@ type IncomingAccountingDocument {
   """ChPvn/21716 (as enumeration)"""
   changedByProvenanceAsEnum: ProvenanceDomain
 
+  """AiDetSt/22180"""
+  autoInvoiceDetectStatus: Int
+
+  """AiDetSt/22180 (as enumeration)"""
+  autoInvoiceDetectStatusAsEnum: AutoInvoiceDetectStatusDomain
+
+  """AiDetLogNo/22181"""
+  autoInvoiceDetectLogNo: Int
+
   """ChDt/17933 + ChTm/17934 (datetime value)"""
   changedDateTime: DateTime
 
@@ -312826,6 +313329,57 @@ type IncomingAccountingDocument {
     having: IncomingAccountingDocumentAttachment_HavingType
   ): IncomingAccountingDocument_IncomingAccountingDocumentAttachment_via_IncomingAccountingDocument_Connection
 
+  """A field for accessing the data from the table `AutoInvoiceDetectLog`"""
+  joindown_AutoInvoiceDetectLog_via_IncomingAccountingDocument(
+    """An object that defines the filter for the search"""
+    filter: FilterExpression_AutoInvoiceDetectLog
+
+    """If true, only distinct values will be returned."""
+    distinct: Boolean
+
+    """The number of items to skip before retrieving others."""
+    skip: Int
+
+    """The maximum number of items to return for forward pagination."""
+    first: Int
+
+    """The maximum number of items to return for backward pagination."""
+    last: Int
+
+    """
+    The cursor of the last item in the previous page. Used for forward pagination only.
+    """
+    after: String
+
+    """Include the record indicated by the after cursor."""
+    includeAfter: Boolean
+
+    """
+    The cursor of the first item in the next page. User for backward pagination only.
+    """
+    before: String
+
+    """Include the record indicated by the before cursor."""
+    includeBefore: Boolean
+
+    """
+    Performs the query in an unoptimized way. Should be used for queries that fetch nested data from a one-to-many relation.
+    """
+    unoptimized: Boolean
+
+    """[Deprecated] An object that defines the sort order for the results"""
+    sortOrder: OrderBy_AutoInvoiceDetectLog
+
+    """The list of columns to order by"""
+    orderBy: [OrderBy_AutoInvoiceDetectLog!]
+
+    """The list of columns to group by"""
+    groupBy: [AutoInvoiceDetectLog_GroupByType!]
+
+    """Filter expression for aggregaged columns"""
+    having: AutoInvoiceDetectLog_HavingType
+  ): IncomingAccountingDocument_AutoInvoiceDetectLog_via_IncomingAccountingDocument_Connection
+
   """A field for accessing the data from the table `InvoiceResponse`"""
   joindown_InvoiceResponse_via_IncomingAccountingDocument(
     """An object that defines the filter for the search"""
@@ -312957,6 +313511,11 @@ type IncomingAccountingDocument {
   A one-to-one relation, "Batch" (4103), from "IncomingAccountingDocument" (table "InAcDoc" (406), columns {InAcDocNo, 17924}) to "Batch" (table "WaBnd" (44), columns {InAcDocNo, 19539}).
   """
   joinup_Batch: Batch
+
+  """
+  A one-to-one relation, "AutoInvoiceDetectLog" (4137), from "IncomingAccountingDocument" (table "InAcDoc" (406), columns {AiDetLogNo, 22181}) to "AutoInvoiceDetectLog" (table "AiDetLog" (488), columns {AiDetLogNo, 22182}).
+  """
+  joinup_AutoInvoiceDetectLog: AutoInvoiceDetectLog
 }
 
 """
@@ -313063,6 +313622,12 @@ type IncomingAccountingDocumentConnectionAggregate {
 
   """ChPvn/21716"""
   changedByProvenance: Int
+
+  """AiDetSt/22180"""
+  autoInvoiceDetectStatus: Int
+
+  """AiDetLogNo/22181"""
+  autoInvoiceDetectLogNo: Int
 
   """Extension columns for aggregates"""
   extensions: AggregateExtension
@@ -313181,6 +313746,12 @@ type IncomingAccountingDocument_CountConnectionAggregate {
   """ChPvn/21716"""
   changedByProvenance: Int
 
+  """AiDetSt/22180"""
+  autoInvoiceDetectStatus: Int
+
+  """AiDetLogNo/22181"""
+  autoInvoiceDetectLogNo: Int
+
   """Extension columns for aggregates"""
   extensions: AggregateExtension
 }
@@ -313270,6 +313841,12 @@ type IncomingAccountingDocumentWithDateTimeConnectionAggregate {
 
   """ChPvn/21716"""
   changedByProvenance: Int
+
+  """AiDetSt/22180"""
+  autoInvoiceDetectStatus: Int
+
+  """AiDetLogNo/22181"""
+  autoInvoiceDetectLogNo: Int
 
   """Extension columns for aggregates"""
   extensions: AggregateExtension
@@ -364834,6 +365411,8 @@ input OrderBy_IncomingAccountingDocument {
   externalIdVoucher: SortOrder
   createdByProvenance: SortOrder
   changedByProvenance: SortOrder
+  autoInvoiceDetectStatus: SortOrder
+  autoInvoiceDetectLogNo: SortOrder
 
   """Extension fields"""
   extensions: SortColumnExtension
@@ -386903,6 +387482,9 @@ enum WorkflowProcessingDomain {
 
   """Dec=524288, Hex=80000"""
   BlockApprovalOnMissingMandatoryFields
+
+  """Dec=1048576, Hex=100000"""
+  ReceiveDocumentsFromDocScan
 }
 
 """Domain Exclude from approval flow"""
@@ -689194,6 +689776,448 @@ type IncomingAccountingDocument_IncomingAccountingDocumentAttachment_via_Incomin
 }
 
 """
+A connection from an object to a list of objects of type AutoInvoiceDetectLog.
+"""
+type IncomingAccountingDocument_AutoInvoiceDetectLog_via_IncomingAccountingDocument_Connection {
+  """
+  A count of the total number of objects in this connection, ignoring pagination. This allows a client to fetch a given number of objects by passing that as the argument to `first`, then fetch the total count so it could display "N of Total". In cases where we employ infinite scrolling or don't have an exact count of entries, this field will return `null`.
+  """
+  totalCount: Int
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """Array of rows returned by the query operation."""
+  items: [AutoInvoiceDetectLog]
+}
+
+"""Table "AiDetLog" (488)."""
+type AutoInvoiceDetectLog {
+  """[PK] [indexed] AiDetLogNo/22182"""
+  autoInvoiceDetectLogNo: Int
+
+  """[indexed] InAcDocNo/22183"""
+  incomingAccountingDocumentNo: Int
+
+  """[S(40)] ExtDocId/22184"""
+  externalDocumentId: String
+
+  """TrigTs/22185"""
+  triggeredTimestamp: DateTime
+
+  """Src/22186"""
+  source: Int
+
+  """Src/22186 (as enumeration)"""
+  sourceAsEnum: AutoInvoiceDetectSourceDomain
+
+  """DetFlg/22187"""
+  autoInvoiceDetectFlags: Int
+
+  """DetFlg/22187 (flags array)"""
+  autoInvoiceDetectFlagsFlags: [AutoInvoiceDetectFlagsDomain]
+
+  """[B] ResJson/22188"""
+  resultJson: String
+
+  """ChDt/22189"""
+  changedDate: Int
+
+  """ChDt/22189 (date value)"""
+  changedDateAsDate: Date
+
+  """ChTm/22190"""
+  changedTime: Short
+
+  """ChTm/22190 (time value)"""
+  changedTimeAsTime: String
+
+  """[S(24)] ChUsr/22191"""
+  changedByUser: String
+
+  """LckSt/22192"""
+  editStatus: Byte
+
+  """LckSt/22192 (as enumeration)"""
+  editStatusAsEnum: EditStatusDomain
+
+  """ChPrc/22193"""
+  lockedByProcessNo: Int
+
+  """CreDt/22195"""
+  createdDate: Int
+
+  """CreDt/22195 (date value)"""
+  createdDateAsDate: Date
+
+  """CreTm/22196"""
+  createdTime: Short
+
+  """CreTm/22196 (time value)"""
+  createdTimeAsTime: String
+
+  """[S(24)] CreUsr/22197"""
+  createdByUser: String
+
+  """ChTs/22198"""
+  changedTimestamp: DateTime
+
+  """CreTs/22199"""
+  createdTimestamp: DateTime
+
+  """CrePvn/22200"""
+  createdByProvenance: Int
+
+  """CrePvn/22200 (as enumeration)"""
+  createdByProvenanceAsEnum: ProvenanceDomain
+
+  """ChPvn/22201"""
+  changedByProvenance: Int
+
+  """ChPvn/22201 (as enumeration)"""
+  changedByProvenanceAsEnum: ProvenanceDomain
+
+  """ChDt/22189 + ChTm/22190 (datetime value)"""
+  changedDateTime: DateTime
+
+  """ChDt/22189 + ChTm/22190 (datetime value in UTC)"""
+  changedDateTimeUtc: DateTime
+
+  """CreDt/22195 + CreTm/22196 (datetime value)"""
+  createdDateTime: DateTime
+
+  """CreDt/22195 + CreTm/22196 (datetime value in UTC)"""
+  createdDateTimeUtc: DateTime
+
+  """Extension fields for the object."""
+  extensions: TableExtension
+
+  """A field for aggregate functions for the table `AutoInvoiceDetectLog`."""
+  aggregates: AutoInvoiceDetectLog_AutoInvoiceDetectLogConnectionAggregate_ConnectionNode
+
+  """
+  A field for accessing the data from the table `IncomingAccountingDocument`
+  """
+  joindown_IncomingAccountingDocument_via_AutoInvoiceDetectLog(
+    """An object that defines the filter for the search"""
+    filter: FilterExpression_IncomingAccountingDocument
+
+    """If true, only distinct values will be returned."""
+    distinct: Boolean
+
+    """The number of items to skip before retrieving others."""
+    skip: Int
+
+    """The maximum number of items to return for forward pagination."""
+    first: Int
+
+    """The maximum number of items to return for backward pagination."""
+    last: Int
+
+    """
+    The cursor of the last item in the previous page. Used for forward pagination only.
+    """
+    after: String
+
+    """Include the record indicated by the after cursor."""
+    includeAfter: Boolean
+
+    """
+    The cursor of the first item in the next page. User for backward pagination only.
+    """
+    before: String
+
+    """Include the record indicated by the before cursor."""
+    includeBefore: Boolean
+
+    """
+    Performs the query in an unoptimized way. Should be used for queries that fetch nested data from a one-to-many relation.
+    """
+    unoptimized: Boolean
+
+    """[Deprecated] An object that defines the sort order for the results"""
+    sortOrder: OrderBy_IncomingAccountingDocument
+
+    """The list of columns to order by"""
+    orderBy: [OrderBy_IncomingAccountingDocument!]
+
+    """The list of columns to group by"""
+    groupBy: [IncomingAccountingDocument_GroupByType!]
+
+    """Filter expression for aggregaged columns"""
+    having: IncomingAccountingDocument_HavingType
+  ): AutoInvoiceDetectLog_IncomingAccountingDocument_via_AutoInvoiceDetectLog_Connection
+
+  """
+  A one-to-one relation, "IncomingAccountingDocument" (4138), from "AutoInvoiceDetectLog" (table "AiDetLog" (488), columns {InAcDocNo, 22183}) to "IncomingAccountingDocument" (table "InAcDoc" (406), columns {InAcDocNo, 17924}).
+  """
+  joinup_IncomingAccountingDocument: IncomingAccountingDocument
+}
+
+"""
+The type of the node for aggregate functions for the table `AutoInvoiceDetectLog`.
+"""
+type AutoInvoiceDetectLog_AutoInvoiceDetectLogConnectionAggregate_ConnectionNode {
+  """A node for computing the sum aggregate."""
+  sum: AutoInvoiceDetectLogConnectionAggregate
+
+  """A node for computing the sumDistinct aggregate."""
+  sumDistinct: AutoInvoiceDetectLogConnectionAggregate
+
+  """A node for computing the average aggregate."""
+  average: AutoInvoiceDetectLogConnectionAggregate
+
+  """A node for computing the averageDistinct aggregate."""
+  averageDistinct: AutoInvoiceDetectLogConnectionAggregate
+
+  """A node for computing the count aggregate."""
+  count: AutoInvoiceDetectLog_CountConnectionAggregate
+
+  """A node for computing the countDistinct aggregate."""
+  countDistinct: AutoInvoiceDetectLog_CountConnectionAggregate
+
+  """A node for computing the minimum aggregate."""
+  minimum: AutoInvoiceDetectLogWithDateTimeConnectionAggregate
+
+  """A node for computing the maximum aggregate."""
+  maximum: AutoInvoiceDetectLogWithDateTimeConnectionAggregate
+
+  """A node for computing the variance aggregate."""
+  variance: AutoInvoiceDetectLogConnectionAggregate
+
+  """A node for computing the varianceDistinct aggregate."""
+  varianceDistinct: AutoInvoiceDetectLogConnectionAggregate
+
+  """A node for computing the variancePopulation aggregate."""
+  variancePopulation: AutoInvoiceDetectLogConnectionAggregate
+
+  """A node for computing the variancePopulationDistinct aggregate."""
+  variancePopulationDistinct: AutoInvoiceDetectLogConnectionAggregate
+
+  """A node for computing the standardDeviation aggregate."""
+  standardDeviation: AutoInvoiceDetectLogConnectionAggregate
+
+  """A node for computing the standardDeviationDistinct aggregate."""
+  standardDeviationDistinct: AutoInvoiceDetectLogConnectionAggregate
+
+  """A node for computing the standardDeviationPopulation aggregate."""
+  standardDeviationPopulation: AutoInvoiceDetectLogConnectionAggregate
+
+  """
+  A node for computing the standardDeviationPopulationDistinct aggregate.
+  """
+  standardDeviationPopulationDistinct: AutoInvoiceDetectLogConnectionAggregate
+}
+
+"""Table "AiDetLog" (488)."""
+type AutoInvoiceDetectLogConnectionAggregate {
+  """[PK] [indexed] AiDetLogNo/22182"""
+  autoInvoiceDetectLogNo: Int
+
+  """[indexed] InAcDocNo/22183"""
+  incomingAccountingDocumentNo: Int
+
+  """Src/22186"""
+  source: Int
+
+  """LckSt/22192"""
+  editStatus: Byte
+
+  """ChPrc/22193"""
+  lockedByProcessNo: Int
+
+  """CrePvn/22200"""
+  createdByProvenance: Int
+
+  """ChPvn/22201"""
+  changedByProvenance: Int
+
+  """Extension columns for aggregates"""
+  extensions: AggregateExtension
+}
+
+"""Table "AiDetLog" (488)."""
+type AutoInvoiceDetectLog_CountConnectionAggregate {
+  """[PK] [indexed] AiDetLogNo/22182"""
+  autoInvoiceDetectLogNo: Int
+
+  """[indexed] InAcDocNo/22183"""
+  incomingAccountingDocumentNo: Int
+
+  """[S(40)] ExtDocId/22184"""
+  externalDocumentId: Int
+
+  """TrigTs/22185"""
+  triggeredTimestamp: Int
+
+  """Src/22186"""
+  source: Int
+
+  """[B] ResJson/22188"""
+  resultJson: Int
+
+  """ChDt/22189"""
+  changedDate: Int
+
+  """ChTm/22190"""
+  changedTime: Int
+
+  """[S(24)] ChUsr/22191"""
+  changedByUser: Int
+
+  """LckSt/22192"""
+  editStatus: Int
+
+  """ChPrc/22193"""
+  lockedByProcessNo: Int
+
+  """CreDt/22195"""
+  createdDate: Int
+
+  """CreTm/22196"""
+  createdTime: Int
+
+  """[S(24)] CreUsr/22197"""
+  createdByUser: Int
+
+  """ChTs/22198"""
+  changedTimestamp: Int
+
+  """CreTs/22199"""
+  createdTimestamp: Int
+
+  """CrePvn/22200"""
+  createdByProvenance: Int
+
+  """ChPvn/22201"""
+  changedByProvenance: Int
+
+  """Extension columns for aggregates"""
+  extensions: AggregateExtension
+}
+
+"""Table "AiDetLog" (488)."""
+type AutoInvoiceDetectLogWithDateTimeConnectionAggregate {
+  """[PK] [indexed] AiDetLogNo/22182"""
+  autoInvoiceDetectLogNo: Int
+
+  """[indexed] InAcDocNo/22183"""
+  incomingAccountingDocumentNo: Int
+
+  """Src/22186"""
+  source: Int
+
+  """ChDt/22189"""
+  changedDate: Int
+
+  """ChDt/22189 (date value)"""
+  changedDateAsDate: Date
+
+  """ChTm/22190"""
+  changedTime: Short
+
+  """ChTm/22190 (time value)"""
+  changedTimeAsTime: String
+
+  """LckSt/22192"""
+  editStatus: Byte
+
+  """ChPrc/22193"""
+  lockedByProcessNo: Int
+
+  """CreDt/22195"""
+  createdDate: Int
+
+  """CreDt/22195 (date value)"""
+  createdDateAsDate: Date
+
+  """CreTm/22196"""
+  createdTime: Short
+
+  """CreTm/22196 (time value)"""
+  createdTimeAsTime: String
+
+  """CrePvn/22200"""
+  createdByProvenance: Int
+
+  """ChPvn/22201"""
+  changedByProvenance: Int
+
+  """Extension columns for aggregates"""
+  extensions: AggregateExtension
+}
+
+"""
+A connection from an object to a list of objects of type IncomingAccountingDocument.
+"""
+type AutoInvoiceDetectLog_IncomingAccountingDocument_via_AutoInvoiceDetectLog_Connection {
+  """
+  A count of the total number of objects in this connection, ignoring pagination. This allows a client to fetch a given number of objects by passing that as the argument to `first`, then fetch the total count so it could display "N of Total". In cases where we employ infinite scrolling or don't have an exact count of entries, this field will return `null`.
+  """
+  totalCount: Int
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """Array of rows returned by the query operation."""
+  items: [IncomingAccountingDocument]
+}
+
+input OrderBy_AutoInvoiceDetectLog {
+  """This field is indexed - sorting by it is fast."""
+  autoInvoiceDetectLogNo: SortOrder
+
+  """This field is indexed - sorting by it is fast."""
+  incomingAccountingDocumentNo: SortOrder
+  externalDocumentId: SortOrder
+  triggeredTimestamp: SortOrder
+  source: SortOrder
+  autoInvoiceDetectFlags: SortOrder
+  resultJson: SortOrder
+  changedDate: SortOrder
+  changedTime: SortOrder
+  changedByUser: SortOrder
+  editStatus: SortOrder
+  lockedByProcessNo: SortOrder
+  createdDate: SortOrder
+  createdTime: SortOrder
+  createdByUser: SortOrder
+  changedTimestamp: SortOrder
+  createdTimestamp: SortOrder
+  createdByProvenance: SortOrder
+  changedByProvenance: SortOrder
+
+  """Extension fields"""
+  extensions: SortColumnExtension
+
+  """
+  Sort by the sum aggregate of a column. Only valid on grouped queries (requires groupBy).
+  """
+  _sum: OrderBy_AutoInvoiceDetectLog
+
+  """
+  Sort by the average aggregate of a column. Only valid on grouped queries (requires groupBy).
+  """
+  _average: OrderBy_AutoInvoiceDetectLog
+
+  """
+  Sort by the minimum aggregate of a column. Only valid on grouped queries (requires groupBy).
+  """
+  _minimum: OrderBy_AutoInvoiceDetectLog
+
+  """
+  Sort by the maximum aggregate of a column. Only valid on grouped queries (requires groupBy).
+  """
+  _maximum: OrderBy_AutoInvoiceDetectLog
+
+  """
+  Sort by the count aggregate of a column. Only valid on grouped queries (requires groupBy).
+  """
+  _count: OrderBy_AutoInvoiceDetectLog
+  _thenBy: OrderBy_AutoInvoiceDetectLog
+}
+
+"""
 A connection from an object to a list of objects of type InvoiceResponse.
 """
 type IncomingAccountingDocument_InvoiceResponse_via_IncomingAccountingDocument_Connection {
@@ -899229,6 +900253,12 @@ type IncomingAccountingDocumentAggregate {
 
   """ChPvn/21716"""
   changedByProvenance: Int
+
+  """AiDetSt/22180"""
+  autoInvoiceDetectStatus: Int
+
+  """AiDetLogNo/22181"""
+  autoInvoiceDetectLogNo: Int
 }
 
 """Table "InAcDoc" (406)."""
@@ -899340,6 +900370,12 @@ type IncomingAccountingDocument_CountAggregate {
 
   """ChPvn/21716"""
   changedByProvenance: Int
+
+  """AiDetSt/22180"""
+  autoInvoiceDetectStatus: Int
+
+  """AiDetLogNo/22181"""
+  autoInvoiceDetectLogNo: Int
 }
 
 """Table "InAcDoc" (406)."""
@@ -899424,6 +900460,12 @@ type IncomingAccountingDocumentWithDateTimeAggregate {
 
   """ChPvn/21716"""
   changedByProvenance: Int
+
+  """AiDetSt/22180"""
+  autoInvoiceDetectStatus: Int
+
+  """AiDetLogNo/22181"""
+  autoInvoiceDetectLogNo: Int
 }
 
 """Table "InAcDoc" (406)."""
@@ -899559,6 +900601,12 @@ type IncomingAccountingDocumentDistinct {
 
   """ChPvn/21716"""
   changedByProvenance: [Int]
+
+  """AiDetSt/22180"""
+  autoInvoiceDetectStatus: [Int]
+
+  """AiDetLogNo/22181"""
+  autoInvoiceDetectLogNo: [Int]
 }
 
 """
@@ -901426,6 +902474,281 @@ type IncomingAccountingDocumentAttachmentDistinct {
   createdByProvenance: [Int]
 
   """ChPvn/21732"""
+  changedByProvenance: [Int]
+}
+
+"""
+A connection from an object to a list of objects of type AutoInvoiceDetectLog.
+"""
+type Query_UseCompany_AutoInvoiceDetectLog_Connection {
+  """
+  A count of the total number of objects in this connection, ignoring pagination. This allows a client to fetch a given number of objects by passing that as the argument to `first`, then fetch the total count so it could display "N of Total". In cases where we employ infinite scrolling or don't have an exact count of entries, this field will return `null`.
+  """
+  totalCount: Int
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """Array of rows returned by the query operation."""
+  items: [AutoInvoiceDetectLog]
+}
+
+"""
+The type of the node for aggregate functions for the table `AutoInvoiceDetectLog`.
+"""
+type Query_UseCompany_AutoInvoiceDetectLogAggregate_Node {
+  """A node for computing the sum aggregate."""
+  sum: AutoInvoiceDetectLogAggregate
+
+  """A node for computing the sumDistinct aggregate."""
+  sumDistinct: AutoInvoiceDetectLogAggregate
+
+  """A node for computing the average aggregate."""
+  average: AutoInvoiceDetectLogAggregate
+
+  """A node for computing the averageDistinct aggregate."""
+  averageDistinct: AutoInvoiceDetectLogAggregate
+
+  """A node for computing the count aggregate."""
+  count: AutoInvoiceDetectLog_CountAggregate
+
+  """A node for computing the countDistinct aggregate."""
+  countDistinct: AutoInvoiceDetectLog_CountAggregate
+
+  """A node for computing the minimum aggregate."""
+  minimum: AutoInvoiceDetectLogWithDateTimeAggregate
+
+  """A node for computing the maximum aggregate."""
+  maximum: AutoInvoiceDetectLogWithDateTimeAggregate
+
+  """A node for computing the variance aggregate."""
+  variance: AutoInvoiceDetectLogAggregate
+
+  """A node for computing the varianceDistinct aggregate."""
+  varianceDistinct: AutoInvoiceDetectLogAggregate
+
+  """A node for computing the variancePopulation aggregate."""
+  variancePopulation: AutoInvoiceDetectLogAggregate
+
+  """A node for computing the variancePopulationDistinct aggregate."""
+  variancePopulationDistinct: AutoInvoiceDetectLogAggregate
+
+  """A node for computing the standardDeviation aggregate."""
+  standardDeviation: AutoInvoiceDetectLogAggregate
+
+  """A node for computing the standardDeviationDistinct aggregate."""
+  standardDeviationDistinct: AutoInvoiceDetectLogAggregate
+
+  """A node for computing the standardDeviationPopulation aggregate."""
+  standardDeviationPopulation: AutoInvoiceDetectLogAggregate
+
+  """
+  A node for computing the standardDeviationPopulationDistinct aggregate.
+  """
+  standardDeviationPopulationDistinct: AutoInvoiceDetectLogAggregate
+
+  """A node for querying distinct values"""
+  distinct: AutoInvoiceDetectLogDistinct
+}
+
+"""Table "AiDetLog" (488)."""
+type AutoInvoiceDetectLogAggregate {
+  """[PK] [indexed] AiDetLogNo/22182"""
+  autoInvoiceDetectLogNo: Int
+
+  """[indexed] InAcDocNo/22183"""
+  incomingAccountingDocumentNo: Int
+
+  """Src/22186"""
+  source: Int
+
+  """LckSt/22192"""
+  editStatus: Byte
+
+  """ChPrc/22193"""
+  lockedByProcessNo: Int
+
+  """CrePvn/22200"""
+  createdByProvenance: Int
+
+  """ChPvn/22201"""
+  changedByProvenance: Int
+}
+
+"""Table "AiDetLog" (488)."""
+type AutoInvoiceDetectLog_CountAggregate {
+  """[PK] [indexed] AiDetLogNo/22182"""
+  autoInvoiceDetectLogNo: Int
+
+  """[indexed] InAcDocNo/22183"""
+  incomingAccountingDocumentNo: Int
+
+  """[S(40)] ExtDocId/22184"""
+  externalDocumentId: Int
+
+  """TrigTs/22185"""
+  triggeredTimestamp: Int
+
+  """Src/22186"""
+  source: Int
+
+  """[B] ResJson/22188"""
+  resultJson: Int
+
+  """ChDt/22189"""
+  changedDate: Int
+
+  """ChTm/22190"""
+  changedTime: Int
+
+  """[S(24)] ChUsr/22191"""
+  changedByUser: Int
+
+  """LckSt/22192"""
+  editStatus: Int
+
+  """ChPrc/22193"""
+  lockedByProcessNo: Int
+
+  """CreDt/22195"""
+  createdDate: Int
+
+  """CreTm/22196"""
+  createdTime: Int
+
+  """[S(24)] CreUsr/22197"""
+  createdByUser: Int
+
+  """ChTs/22198"""
+  changedTimestamp: Int
+
+  """CreTs/22199"""
+  createdTimestamp: Int
+
+  """CrePvn/22200"""
+  createdByProvenance: Int
+
+  """ChPvn/22201"""
+  changedByProvenance: Int
+}
+
+"""Table "AiDetLog" (488)."""
+type AutoInvoiceDetectLogWithDateTimeAggregate {
+  """[PK] [indexed] AiDetLogNo/22182"""
+  autoInvoiceDetectLogNo: Int
+
+  """[indexed] InAcDocNo/22183"""
+  incomingAccountingDocumentNo: Int
+
+  """Src/22186"""
+  source: Int
+
+  """ChDt/22189"""
+  changedDate: Int
+
+  """ChDt/22189 (date value)"""
+  changedDateAsDate: Date
+
+  """ChTm/22190"""
+  changedTime: Short
+
+  """ChTm/22190 (time value)"""
+  changedTimeAsTime: String
+
+  """LckSt/22192"""
+  editStatus: Byte
+
+  """ChPrc/22193"""
+  lockedByProcessNo: Int
+
+  """CreDt/22195"""
+  createdDate: Int
+
+  """CreDt/22195 (date value)"""
+  createdDateAsDate: Date
+
+  """CreTm/22196"""
+  createdTime: Short
+
+  """CreTm/22196 (time value)"""
+  createdTimeAsTime: String
+
+  """CrePvn/22200"""
+  createdByProvenance: Int
+
+  """ChPvn/22201"""
+  changedByProvenance: Int
+}
+
+"""Table "AiDetLog" (488)."""
+type AutoInvoiceDetectLogDistinct {
+  """[PK] [indexed] AiDetLogNo/22182"""
+  autoInvoiceDetectLogNo: [Int]
+
+  """[indexed] InAcDocNo/22183"""
+  incomingAccountingDocumentNo: [Int]
+
+  """[S(40)] ExtDocId/22184"""
+  externalDocumentId: [String]
+
+  """TrigTs/22185"""
+  triggeredTimestamp: [DateTime]
+
+  """Src/22186"""
+  source: [Int]
+
+  """DetFlg/22187"""
+  autoInvoiceDetectFlags: [Int]
+
+  """[B] ResJson/22188"""
+  resultJson: [String]
+
+  """ChDt/22189"""
+  changedDate: [Int]
+
+  """ChDt/22189 (date value)"""
+  changedDateAsDate: [Date]
+
+  """ChTm/22190"""
+  changedTime: [Short]
+
+  """ChTm/22190 (time value)"""
+  changedTimeAsTime: [String]
+
+  """[S(24)] ChUsr/22191"""
+  changedByUser: [String]
+
+  """LckSt/22192"""
+  editStatus: [Byte]
+
+  """ChPrc/22193"""
+  lockedByProcessNo: [Int]
+
+  """CreDt/22195"""
+  createdDate: [Int]
+
+  """CreDt/22195 (date value)"""
+  createdDateAsDate: [Date]
+
+  """CreTm/22196"""
+  createdTime: [Short]
+
+  """CreTm/22196 (time value)"""
+  createdTimeAsTime: [String]
+
+  """[S(24)] CreUsr/22197"""
+  createdByUser: [String]
+
+  """ChTs/22198"""
+  changedTimestamp: [DateTime]
+
+  """CreTs/22199"""
+  createdTimestamp: [DateTime]
+
+  """CrePvn/22200"""
+  createdByProvenance: [Int]
+
+  """ChPvn/22201"""
   changedByProvenance: [Int]
 }
 
@@ -1016920,7 +1018243,18 @@ type CustomerTransactionProcessings_CurrencyCorrection {
 
 input CustomerTransactionProcessings_CurrencyCorrection_Parameters {
   valueDate: Int
+  valueDateMode: Int
+  valueDateModeAsEnum: ValueDateModeDomain
   deleteCurrencyCorrectionDataRowsForAccountType: Byte
+}
+
+"""Domain Value date"""
+enum ValueDateModeDomain {
+  """Dec=2, Hex=2"""
+  LastDayOfPreviousMonth
+
+  """Dec=1, Hex=1"""
+  SpecificDate
 }
 
 type CustomerTransactionProcessings_CompressTransactions {
@@ -1017413,6 +1018747,8 @@ type SupplierTransactionProcessings_CurrencyCorrection {
 
 input SupplierTransactionProcessings_CurrencyCorrection_Parameters {
   valueDate: Int
+  valueDateMode: Int
+  valueDateModeAsEnum: ValueDateModeDomain
   deleteCurrencyCorrectionDataRowsForAccountType: Byte
 }
 
@@ -1017846,6 +1019182,8 @@ type GeneralLedgerTransactionProcessings_CurrencyCorrection {
 
 input GeneralLedgerTransactionProcessings_CurrencyCorrection_Parameters {
   valueDate: Int
+  valueDateMode: Int
+  valueDateModeAsEnum: ValueDateModeDomain
   deleteCurrencyCorrectionDataRowsForAccountType: Byte
 }
 
@@ -1018332,6 +1019670,8 @@ type CapitalAssetTransactionProcessings_CurrencyCorrection {
 
 input CapitalAssetTransactionProcessings_CurrencyCorrection_Parameters {
   valueDate: Int
+  valueDateMode: Int
+  valueDateModeAsEnum: ValueDateModeDomain
   deleteCurrencyCorrectionDataRowsForAccountType: Byte
 }
 
@@ -1019960,6 +1021300,11 @@ input OrderProcessings_GenerateOrders_Parameters {
 
 type OrderProcessings_CreateOrderCopy {
   succeeded: Boolean
+  items: [OrderProcessings_CreateOrderCopy_Items]
+}
+
+type OrderProcessings_CreateOrderCopy_Items {
+  orderNo: Int
 }
 
 input OrderProcessings_CreateOrderCopy_Parameters {
@@ -1022997,6 +1024342,8 @@ type CurrencyCorrectionDataProcessings_TransferCorrectionsToTable {
 
 input CurrencyCorrectionDataProcessings_TransferCorrectionsToTable_Parameters {
   valueDate: Int
+  valueDateMode: Int
+  valueDateModeAsEnum: ValueDateModeDomain
 }
 
 type InterestLineProcessings {
